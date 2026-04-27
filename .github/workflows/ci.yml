@@ -1,0 +1,34 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.9", "3.12"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - uses: actions/setup-node@v4
+        if: matrix.python-version == '3.12'
+        with:
+          node-version: "20"
+      - name: Validate repo structure and links
+        run: python3 scripts/validate_skill_repo.py
+      - name: Run installer smoke tests
+        run: python3 scripts/smoke_test_installer.py
+      - name: Run contact sheet smoke test
+        run: python3 scripts/smoke_test_contact_sheet.py
+      - name: Run browser contact sheet smoke test
+        if: matrix.python-version == '3.12'
+        run: python3 scripts/smoke_test_contact_sheet_browser.py
+      - name: Run package scaffold smoke test
+        run: python3 scripts/smoke_test_package_scaffold.py

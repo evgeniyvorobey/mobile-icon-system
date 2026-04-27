@@ -1,0 +1,8 @@
+interface:
+  display_name: "Mobile Icon System"
+  short_description: "Self-contained workflow for the full brand icon set of a mobile app (Tab Bar, action, system, media, status, communication, commerce, content, social, editing, time, location, security) — WCAG 2.2 accessible, Figma/Pencil MCP integrated"
+  brand_color: "#3F7FCF"
+  default_prompt: "Use $mobile-icon-system to inspect the current app UI (via Figma MCP, Pencil MCP, or filesystem), ingest Brand DNA, define icon system rules including the accessibility budget, and generate the full brand icon set across every category in scope. Confirm the rules with me before generating, run cross-icon consistency and WCAG 2.2 accessibility audits after generation, and validate in real Tab Bar / Bottom Nav and adjacent surface contexts."
+
+policy:
+  allow_implicit_invocation: true
