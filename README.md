@@ -1,10 +1,10 @@
 # Mobile Icon System Skill
 
-**Current version: 0.2.0** | [Changelog](CHANGELOG.md) | [Migration guide](MIGRATION.md)
+**Current version: 0.3.0** | [Changelog](CHANGELOG.md) | [Migration guide](MIGRATION.md)
 
-A self-contained AI skill for Codex and Claude that designs, refines, audits, and packages the **full brand icon set** for a mobile app — Tab Bar / Bottom Nav, action, system, media, status, communication, commerce, content, social, editing, time, location, and security icons — all inheriting one Brand DNA, validated for WCAG 2.2 accessibility, and shipped as platform-ready iOS/Android assets.
+A self-contained AI skill for Codex and Claude that designs, refines, audits, and packages the **full brand icon set** for a mobile app — Tab Bar / Bottom Nav, action, system, media, status, communication, commerce, content, social, editing, time, location, and security icons — all inheriting one Brand DNA, validated for WCAG 2.2 accessibility and grade-checked against a hand-curated craft rubric, and shipped as platform-ready iOS/Android assets.
 
-It is built for real product UI work, not generic icon-pack generation. The skill is fully standalone — it does not depend on any other skill or external generator — and integrates with Figma and Pencil MCP servers when available, falling back to filesystem-only mode otherwise.
+It is built for real product UI work, not generic icon-pack generation. The skill is fully standalone — it does not depend on any other skill or external generator — integrates with Figma and Pencil MCP servers when available, ships a calibration corpus of tier-A/B/C reference icons so generators can compare instead of guess, includes a render-and-grade pipeline that actually rasterizes SVG output and measures it against numerical thresholds, and falls back to filesystem-only mode when no design-tool MCP is connected.
 
 ## Contents
 

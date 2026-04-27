@@ -1,0 +1,31 @@
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  width="24"
+  height="24"
+  viewBox="0 0 24 24"
+  fill="none"
+  stroke="currentColor"
+  stroke-width="1.5"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+>
+  <!-- ANTI-EXAMPLE: notification state is conveyed ONLY by a red color dot.
+       The bell itself is fine. The failure is the unread indicator: it is
+       differentiated from a "read" state purely by `fill="red"`.
+       Fails accessibility — invisible in Forced Colors mode and indistinguishable
+       under deuteranopia simulation. The "read" version of this icon would be
+       byte-identical except for swapping the red fill to none, so an assistive
+       technology user has no way to know there is a pending notification.
+       Violates references/accessibility.md and aesthetic principle 6 (color
+       compensating for weak silhouette is loud, not informative). -->
+
+  <!-- Bell body (geometry is clean — it's the dot that's the failure) -->
+  <path d="M6 8 a6 6 0 0 1 12 0 c0 4.5 1.5 5.5 2 6 H4 c0.5 -0.5 2 -1.5 2 -6 Z" />
+
+  <!-- Clapper -->
+  <path d="M10.27 19 a2 2 0 0 0 3.46 0" />
+
+  <!-- Color-only "unread" indicator: red dot, no shape change, no badge outline,
+       no shape addition. -->
+  <circle cx="18.5" cy="5.5" r="2.5" fill="red" stroke="none" />
+</svg>

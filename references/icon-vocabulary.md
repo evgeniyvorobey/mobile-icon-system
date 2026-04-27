@@ -24,6 +24,18 @@ The vocabulary below covers the categories a complete brand icon set normally ne
 
 A typical full-coverage app icon set lands at ~50–80 icons. Tab Bar comes first because it is the most public surface, but the entire set must inherit the same Brand DNA — generate as one family, never as siloed sub-sets.
 
+## Calibration corpus references
+
+For metaphors marked with a **Reference:** block below, the skill ships hand-curated tier-A craft examples in [`assets/references/tier-a/`](../assets/references/tier-a/) and tier-B competent examples in [`assets/references/tier-b/`](../assets/references/tier-b/). When generating one of these metaphors, the LLM should:
+
+1. Read the corresponding `.svg` and `.notes.md` files
+2. Study the cited path-data observations (anchor counts, optical corrections, mathematical derivations of distances)
+3. Reproduce the *principle* (not the literal path) in the brand's geometric alphabet
+
+External reference URLs (Material Symbols, Lucide, Phosphor) are also given for metaphors not yet covered by the in-repo corpus. These are read-only references — never fetched at runtime.
+
+Anti-examples live in [`assets/references/tier-c/`](../assets/references/tier-c/) and demonstrate failure modes the LLM must learn to **avoid**, not emulate. See [`craft-rubric.md`](craft-rubric.md) for numerical thresholds and [`design-tool-integrations.md`](design-tool-integrations.md) for how to use the corpus when a design-tool MCP is connected.
+
 ## Tab Bar / Bottom Nav Standards
 
 These are the most common Tab Bar destinations. Each row shows: meaning → recommended form → common cliché → cross-cultural notes.
@@ -32,8 +44,12 @@ These are the most common Tab Bar destinations. Each row shows: meaning → reco
 
 - **Meaning**: Return to app's main entry / dashboard
 - **Recommended forms**: house silhouette (most universal), simple geometric anchor (e.g., diamond, circle within square)
-- **Cliché**: literal house with chimney + door + window (over-detailed)
+- **Cliché**: literal house with chimney + door + window (over-detailed) — see [`tier-c/home-overdetailed.svg`](../assets/references/tier-c/home-overdetailed.svg)
 - **Cross-cultural**: house metaphor reads globally; chimney does not
+- **Reference:**
+  - tier-A outlined: [`tier-a/home-outlined.svg`](../assets/references/tier-a/home-outlined.svg) (Lucide `house`, ISC) — door+wall as one path, peak deduced from arithmetic, all corners at consistent 2pt radius
+  - tier-A filled: [`tier-a/home-filled.svg`](../assets/references/tier-a/home-filled.svg) (Phosphor `house-fill`, MIT) — single fill path with door cutout via inset path, smaller inner radius
+  - tier-B (split body/floor — flickers at 20pt): [`tier-b/home-outlined.svg`](../assets/references/tier-b/home-outlined.svg) (Heroicons `home`, MIT)
 
 ### Search / Discover
 
@@ -41,6 +57,9 @@ These are the most common Tab Bar destinations. Each row shows: meaning → reco
 - **Recommended forms**: magnifying glass at 45° angle, magnifying glass + sparkle (for AI search)
 - **Cliché**: too-thin handle, perfectly horizontal handle (looks like a frying pan)
 - **Cross-cultural**: universal
+- **Reference:**
+  - tier-A: [`tier-a/search.svg`](../assets/references/tier-a/search.svg) (Lucide `search`, ISC) — `<circle>` primitive + 45° handle line, lens offset from grid center to compensate for handle weight, mathematically derived gap between lens and handle
+  - tier-B (eyeballed handle length): [`tier-b/search.svg`](../assets/references/tier-b/search.svg) (Heroicons `magnifying-glass`, MIT)
 
 ### Library / Collection / Saved
 
@@ -53,22 +72,31 @@ These are the most common Tab Bar destinations. Each row shows: meaning → reco
 
 - **Meaning**: User's account, identity
 - **Recommended forms**: simplified person silhouette (head + shoulders), circle (avatar placeholder)
-- **Cliché**: gendered figure, person + arms (too detailed)
+- **Cliché**: gendered figure, person + arms (too detailed) — see [`tier-c/user-gendered.svg`](../assets/references/tier-c/user-gendered.svg)
 - **Cross-cultural**: avoid gender-coded forms; circle avatar is safest
+- **Reference:**
+  - tier-A: [`tier-a/user.svg`](../assets/references/tier-a/user.svg) (Lucide `user`, ISC) — `<circle>` head + arched-rectangle shoulders, shoulder corner radius equals head radius (one geometric alphabet), no torso/neck/face features
 
 ### Settings / More
 
 - **Meaning**: Configuration, additional options
 - **Recommended forms**: gear (cog), three-dot menu, slider, equalizer
-- **Cliché**: gear with too many teeth (becomes blob at 20pt), wrench
+- **Cliché**: gear with too many teeth (becomes blob at 20pt) — see [`tier-c/settings-12tooth.svg`](../assets/references/tier-c/settings-12tooth.svg); wrench
 - **Cross-cultural**: gear reads globally; wrench reads as repair, not configuration
+- **Reference:**
+  - tier-A: [`tier-a/settings.svg`](../assets/references/tier-a/settings.svg) (Tabler `settings`, MIT) — exactly 8 teeth (optical sweet spot), `1.724` ≈ √3 chord length per tooth (mathematically derived from 360°/8), inner aperture as true stroked circle
+  - tier-B (Bézier-bump teeth blur at 20pt): [`tier-b/settings-bezier.svg`](../assets/references/tier-b/settings-bezier.svg) (Lucide `settings`, ISC)
+  - tier-C (12 teeth → blob at 20pt): [`tier-c/settings-12tooth.svg`](../assets/references/tier-c/settings-12tooth.svg) (Material Symbols Outlined, Apache-2.0)
 
 ### Notifications / Inbox
 
 - **Meaning**: Alerts, messages
 - **Recommended forms**: bell, envelope, dot indicator
-- **Cliché**: bell with ringing lines (over-detailed), envelope with `@` symbol
+- **Cliché**: bell with ringing lines (over-detailed); envelope with `@` symbol; color-only state indicator — see [`tier-c/notification-color-state.svg`](../assets/references/tier-c/notification-color-state.svg)
 - **Cross-cultural**: bell reads as notification; envelope reads as email specifically
+- **Reference:**
+  - tier-A: [`tier-a/bell.svg`](../assets/references/tier-a/bell.svg) (Lucide `bell`, ISC) — dome + clapper as two paths, no ringing lines, clapper width = 2√3 mathematically derived (60° subtended), 1pt visual gap between dome and clapper
+  - tier-C anti-example (color-only "unread" dot, fails accessibility): [`tier-c/notification-color-state.svg`](../assets/references/tier-c/notification-color-state.svg)
 
 ### Activity / Feed
 
@@ -83,6 +111,8 @@ These are the most common Tab Bar destinations. Each row shows: meaning → reco
 - **Recommended forms**: speech bubble, two overlapping bubbles
 - **Cliché**: bubble with `...` (loading state, not message)
 - **Cross-cultural**: speech bubble universal
+- **Reference:**
+  - tier-A: [`tier-a/chat.svg`](../assets/references/tier-a/chat.svg) (Lucide `message-circle`, ISC) — single continuous path for bubble + tail (same fill rule), tail flows OUT of bubble's edge as part of the same `<path>` element, never as a separate triangle
 
 ### Cart / Shop
 
@@ -97,6 +127,9 @@ These are the most common Tab Bar destinations. Each row shows: meaning → reco
 - **Recommended forms**: rectangle with circle (lens), simplified camera body
 - **Cliché**: literal SLR with detailed lens rings
 - **Cross-cultural**: camera form universal
+- **Reference:**
+  - tier-A: [`tier-a/camera.svg`](../assets/references/tier-a/camera.svg) (Phosphor `camera` regular, MIT) — body + hood polyline + single `<circle>` lens, lens shifted DOWN from geometric center (cy=132 not 128) to compensate for hood weight at top
+  - tier-B (decorative microelement): [`tier-b/camera-decorative.svg`](../assets/references/tier-b/camera-decorative.svg) (Heroicons `camera`, MIT) — includes a 0.008-unit "viewfinder light" indicator that disappears at 16pt and is noise at 24pt
 
 ## Action Icons
 
@@ -106,6 +139,8 @@ These are the most common Tab Bar destinations. Each row shows: meaning → reco
 - **Recommended forms**: plus sign, plus in circle, square with plus inside
 - **Cliché**: pencil writing on paper (means edit, not add)
 - **Cross-cultural**: plus universal
+- **Reference:**
+  - tier-A: [`tier-a/plus.svg`](../assets/references/tier-a/plus.svg) (Lucide `plus`, ISC) — two crossing strokes (4 anchors total), NOT a 12-anchor outline of a plus shape; cap radius accounted for by inset coordinates so visible mass aligns to canvas
 
 ### Delete / Remove
 
@@ -113,6 +148,8 @@ These are the most common Tab Bar destinations. Each row shows: meaning → reco
 - **Recommended forms**: trash can, X, minus
 - **Cliché**: X used for both close and delete (ambiguous)
 - **Cross-cultural**: trash can universal in software; minus is safer than X
+- **Reference:**
+  - tier-A: [`tier-a/trash.svg`](../assets/references/tier-a/trash.svg) (Lucide `trash-2`, ISC) — lid bar + handle arch + body + exactly 2 ribs (not 3 or 5 — sparse enough to render at 20pt), lid bar overhangs body by 2pt on each side as optical correction (lid reads as "sitting on top")
 
 ### Share
 
@@ -120,6 +157,9 @@ These are the most common Tab Bar destinations. Each row shows: meaning → reco
 - **Recommended forms**: iOS share box (square + arrow up), three connected dots
 - **Cliché**: paper airplane (means send, not share)
 - **Cross-cultural**: iOS share is iOS-specific; three dots is more universal
+- **Reference:**
+  - tier-A: [`tier-a/share.svg`](../assets/references/tier-a/share.svg) (Lucide `share`, ISC) — tray + up-arrow with explicit 3pt visual gap between arrow base and tray rim (arrow reads as "exiting"), arrow goes UP not horizontally
+  - tier-B (3-circle node graph — harder to recognize at 20pt): [`tier-b/share-graph.svg`](../assets/references/tier-b/share-graph.svg) (Heroicons `share`, MIT)
 
 ### Refresh
 
@@ -148,6 +188,8 @@ These are the most common Tab Bar destinations. Each row shows: meaning → reco
 - **Recommended forms**: X (no surrounding shape), X in circle
 - **Cliché**: minus sign (means remove from list)
 - **Cross-cultural**: X universal
+- **Reference:**
+  - tier-A: [`tier-a/x.svg`](../assets/references/tier-a/x.svg) (Lucide `x`, ISC) — two 45° crossing strokes with the SAME 6pt inset as `plus.svg` (so X and + are visually balanced when adjacent in a UI)
 
 ### Menu / Hamburger
 
@@ -294,6 +336,8 @@ These are the most common Tab Bar destinations. Each row shows: meaning → reco
 - **Recommended forms**: check mark (no surrounding shape, or in circle), check in circle filled
 - **Cliché**: thumbs up (carries opinion), green-only check without shape change (color-blind unsafe)
 - **Cross-cultural**: check mark universal; thumbs up culturally loaded in some regions
+- **Reference:**
+  - tier-A: [`tier-a/check.svg`](../assets/references/tier-a/check.svg) (Lucide `check`, ISC) — single 3-anchor path with two precisely 45° strokes, bend point at (9, 17) left of horizontal center so right side carries more visual weight (correct for LTR reading)
 
 ### Error
 
@@ -512,6 +556,10 @@ These are the most common Tab Bar destinations. Each row shows: meaning → reco
 - **Recommended forms**: heart (filled active, outlined inactive), star
 - **Cliché**: heart used for love + favorite + health (conflated meanings)
 - **Cross-cultural**: heart universal as positive sentiment; clarify meaning per surface
+- **Reference:**
+  - tier-A outlined: [`tier-a/heart-outlined.svg`](../assets/references/tier-a/heart-outlined.svg) (Lucide `heart`, ISC) — single path with *almost* equal lobe radii (5.5 vs 5.49 — intentional optical asymmetry for the right lobe's visual weight), bottom V explicitly rounded with 2pt radius (not a sharp point)
+  - tier-A filled: [`tier-a/heart-filled.svg`](../assets/references/tier-a/heart-filled.svg) (Phosphor `heart-fill`, MIT) — single fill path with asymmetric bottom-tip distances (left ≠ right by 4-5%) for optical balance, lobe-radius / canvas ≈ 0.243
+  - tier-B (perfectly symmetric — feels less alive): [`tier-b/heart-symmetric.svg`](../assets/references/tier-b/heart-symmetric.svg) (Heroicons `heart`, MIT)
 
 ### Star / Rating
 
@@ -640,8 +688,11 @@ These are the most common Tab Bar destinations. Each row shows: meaning → reco
 
 - **Meaning**: Schedule, dates
 - **Recommended forms**: square with binding rings on top, square with date number
-- **Cliché**: calendar with too many date cells
+- **Cliché**: calendar with too many date cells; calendar with literal "12" inside (over-detailed) — see [`tier-c/calendar-overdetailed.svg`](../assets/references/tier-c/calendar-overdetailed.svg)
 - **Cross-cultural**: square+rings universal
+- **Reference:**
+  - tier-A: [`tier-a/calendar.svg`](../assets/references/tier-a/calendar.svg) (Lucide `calendar`, ISC) — rounded rect body + horizontal divider + two short vertical binding posts (mirrored around x=12, exactly 4pt long = 2 stroke widths), no grid of date squares
+  - tier-C anti-example (digits inside body collapse to mush at 16pt): [`tier-c/calendar-overdetailed.svg`](../assets/references/tier-c/calendar-overdetailed.svg) (Phosphor `calendar` regular variant)
 
 ### Alarm
 

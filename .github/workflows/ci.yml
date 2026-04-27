@@ -32,3 +32,40 @@ jobs:
         run: python3 scripts/smoke_test_contact_sheet_browser.py
       - name: Run package scaffold smoke test
         run: python3 scripts/smoke_test_package_scaffold.py
+
+  grade:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.9", "3.12"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: pip
+          cache-dependency-path: requirements-grade.txt
+      - name: Install grade pipeline dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements-grade.txt
+      - name: Smoke test grade.rasterize
+        run: python3 scripts/smoke_test_grade_rasterize.py
+      - name: Smoke test grade.silhouette
+        run: python3 scripts/smoke_test_grade_silhouette.py
+      - name: Smoke test grade.weight
+        run: python3 scripts/smoke_test_grade_weight.py
+      - name: Smoke test grade.alignment
+        run: python3 scripts/smoke_test_grade_alignment.py
+      - name: Smoke test grade.stroke
+        run: python3 scripts/smoke_test_grade_stroke.py
+      - name: Smoke test grade.squint
+        run: python3 scripts/smoke_test_grade_squint.py
+      - name: Smoke test grade.weight set balance
+        run: python3 scripts/smoke_test_grade_balance.py
+      - name: Smoke test grade.pair
+        run: python3 scripts/smoke_test_grade_pair.py
+      - name: Smoke test grade.reference
+        run: python3 scripts/smoke_test_grade_reference.py
+      - name: Smoke test grade end-to-end pipeline
+        run: python3 scripts/smoke_test_grade_end_to_end.py

@@ -171,6 +171,9 @@ When invoked:
    - `{repo_root_expr}/references/icon-vocabulary.md`
    - `{repo_root_expr}/references/cross-icon-consistency.md`
    - `{repo_root_expr}/references/accessibility.md`
+   - `{repo_root_expr}/references/craft-rubric.md`
+   - `{repo_root_expr}/references/negative-space.md`
+   - `{repo_root_expr}/references/aesthetic-principles.md`
    - `{repo_root_expr}/references/platform-icon-specs.md`
    - `{repo_root_expr}/references/icon-set-evaluation.md`
    - `{repo_root_expr}/references/tab-bar-validation.md`

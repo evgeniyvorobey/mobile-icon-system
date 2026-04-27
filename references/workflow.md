@@ -41,9 +41,9 @@ Full workflow for the icon system skill, expanded from `SKILL.md`. 13 phases, tw
 | 4. Build context | ✓ | ✓ | |
 | 5. Define icon system rules (gate) | ✓ | ✓ | mandatory user-confirmation gate |
 | 6. Define vocabulary | ✓ | ✓ | |
-| 7. Generate the set | ✓ | ✓ | |
-| 8. Cross-icon consistency audit | ✓ | ✓ | |
-| 9. Craft pass | skip | ✓ | hi-end only |
+| 7. Generate the set (variants then pick) | ✓ (2 variants) | ✓ (3+ variants) | per-icon variant generation, justified pick |
+| 8. Audit (consistency + second-eye) | ✓ | ✓ | mandatory; loops back to phase 7 on regression |
+| 9. Craft pass | skip | ✓ | hi-end only; uses calibration corpus |
 | 10. Evaluate | ✓ | ✓ | |
 | 11. Validate in context | ✓ | ✓ | hi-end adds themed + competitor row |
 | 12. Improve or question | ✓ | ✓ | |
@@ -131,19 +131,36 @@ Read [`icon-vocabulary.md`](icon-vocabulary.md). For each icon needed:
 
 Output a vocabulary table for user review.
 
-## Phase 7 — Generate the Set
+## Phase 7 — Generate the Set (variants then pick)
 
 **One batch, all icons.** Never generate one at a time — set-level consistency requires set-level thinking.
 
-Each icon:
+For every icon in scope, generate **3 distinct variants** (2 minimum for Standard tier; hi-end always 3+). Variants must differ on at least two of:
+- Primitive choice (which geometric primitives are recruited for this metaphor)
+- Anchor distribution and density
+- Optical correction strength (conservative / standard / pronounced)
+- Terminal angle interpretation
+- Negative-space allocation (counter-form size, trapped space distribution)
+
+Each variant:
 - Built on agreed grid
 - Inherits Brand DNA
 - Outputs both states if Tab Bar
 - Schematic SVG inline, no production polish yet
 
-Read [`concept-quality.md`](concept-quality.md). Verify per-icon: meaning, silhouette, recognition at intended size.
+After all variants are produced, read [`concept-quality.md`](concept-quality.md), [`craft-rubric.md`](craft-rubric.md), [`negative-space.md`](negative-space.md), and [`aesthetic-principles.md`](aesthetic-principles.md). For each icon, score every variant against the rubric and **pick a winner with explicit per-axis reasoning**. Present:
+- The winning set as the primary deliverable
+- A collapsed appendix containing the runner-ups per icon, so the user can request a swap
 
-## Phase 8 — Cross-Icon Consistency Audit
+Per-icon verification on the winners: meaning, silhouette, recognition at intended size, negative-space coherence, anchor economy.
+
+**Why this exists.** Generate-once-pick-once produces "first idea" icons. Designers iterate. Forcing N variants forces the search space to widen, and forcing a justified pick exposes the construction reasoning. This is the difference between "an icon" and "the icon".
+
+## Phase 8 — Audit (consistency + second-eye critique)
+
+Two mandatory passes. Both apply to the winning set chosen in phase 7. Standard tier runs both; hi-end runs both before the craft pass.
+
+### Pass A — Cross-icon consistency
 
 Read [`cross-icon-consistency.md`](cross-icon-consistency.md). Run the full 6-step audit:
 
@@ -154,7 +171,24 @@ Read [`cross-icon-consistency.md`](cross-icon-consistency.md). Run the full 6-st
 5. Optical centering audit
 6. State-pair audit (if Tab Bar)
 
-Output: corrections made, remaining risks.
+### Pass B — Second-eye critique
+
+This is the "sleep on it" pass that separates craft from competence. The model must step out of the brand context and read the set as if seeing it fresh.
+
+1. Re-read [`craft-rubric.md`](craft-rubric.md), [`negative-space.md`](negative-space.md), [`aesthetic-principles.md`](aesthetic-principles.md). Do NOT re-read the brief, Brand DNA, or rules — read the icons as a stranger would.
+2. Score every icon A/B/C across each rubric axis (anchor economy, optical correction, terminal precision, negative-space rhythm, silhouette quality, family resemblance, intentionality, restraint).
+3. For any axis scoring below B on any icon: **loop back to phase 7** for that icon only. Regenerate 3 fresh variants, apply rubric, re-pick. Do not regenerate the whole set.
+4. Cap loop iterations at 2 per icon. If still below B after 2 loops, document the unresolved gap in the audit output and surface it as a punch-list item in phase 12.
+5. Loops are token-expensive but cheap relative to shipping mediocre icons. Do not skip loops to save tokens unless the user explicitly requests minimal mode.
+
+### Output
+
+- Per-icon scorecard (A/B/C per axis, both passes)
+- Corrections made
+- Loop iterations per icon
+- Remaining risks
+
+This phase is the single biggest quality lever in the workflow. Do not collapse it into phase 10 (Evaluate) — evaluation scores; this phase fixes.
 
 ## Phase 9 — Craft Pass (Hi-end Only)
 
@@ -224,6 +258,16 @@ Scaffold via `scripts/init_icon_system_package.py` if a real handoff folder is n
 The workflow halts at:
 
 - Phase 5 gate — until user confirms rules
+- Phase 8 Pass B — loops back to Phase 7 on craft regression (not a halt, an iteration); cap at 2 loops per icon
 - Phase 12 — when 2+ unresolved questions block progress
 
 Do not self-resolve gate decisions. Do not proceed without explicit user confirmation.
+
+## Iteration Loops
+
+The workflow has two intentional loops:
+
+1. **Variant search (within Phase 7)** — N variants per icon, then pick. The "loop" is internal to phase 7; it doesn't iterate over phases.
+2. **Craft regression (Phase 8 Pass B → Phase 7)** — when second-eye critique scores any icon below B on any axis, regenerate that icon only. Cap at 2 iterations per icon to bound cost.
+
+Both loops are mandatory. They are the difference between "first idea" output and craft-level output.

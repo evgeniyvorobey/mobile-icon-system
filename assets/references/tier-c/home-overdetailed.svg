@@ -1,0 +1,46 @@
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  width="24"
+  height="24"
+  viewBox="0 0 24 24"
+  fill="none"
+  stroke="currentColor"
+  stroke-width="1.5"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+>
+  <!-- ANTI-EXAMPLE: literal house with chimney + 4-pane windows + door + door knob.
+       Violates icon-vocabulary.md "Home / Main" cliché list and aesthetic principle 1
+       (restraint). Total path/element count >= 7, total anchor count >= 40. -->
+
+  <!-- Walls (rectangle body) -->
+  <path d="M4 11 L4 21 L20 21 L20 11" />
+
+  <!-- Roof (peak) -->
+  <path d="M3 11 L12 3 L21 11" />
+
+  <!-- Chimney rectangle on the roof (sits on the right rake of the roof) -->
+  <path d="M16 5.5 L16 8 L18 8 L18 7.3 Z" />
+
+  <!-- Front door with frame -->
+  <path d="M10.5 21 L10.5 15.5 L13.5 15.5 L13.5 21" />
+  <path d="M10 15 L10 21 L14 21 L14 15 Z" />
+
+  <!-- Door knob -->
+  <circle cx="13" cy="18.2" r="0.35" fill="currentColor" />
+
+  <!-- Left window with cross mullion (4 quadrants) -->
+  <path d="M5.6 12.5 L5.6 16 L8.4 16 L8.4 12.5 Z" />
+  <path d="M5.6 14.25 L8.4 14.25" />
+  <path d="M7 12.5 L7 16" />
+
+  <!-- Right window with cross mullion (4 quadrants) -->
+  <path d="M15.6 12.5 L15.6 16 L18.4 16 L18.4 12.5 Z" />
+  <path d="M15.6 14.25 L18.4 14.25" />
+  <path d="M17 12.5 L17 16" />
+
+  <!-- Above-door window with cross mullion (4 quadrants) -->
+  <path d="M10.6 12 L10.6 14.5 L13.4 14.5 L13.4 12 Z" />
+  <path d="M10.6 13.25 L13.4 13.25" />
+  <path d="M12 12 L12 14.5" />
+</svg>

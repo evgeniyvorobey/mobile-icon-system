@@ -1,0 +1,34 @@
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  width="24"
+  height="24"
+  viewBox="0 0 24 24"
+  fill="none"
+  stroke="currentColor"
+  stroke-width="1.5"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+>
+  <!-- ANTI-EXAMPLE: gendered profile silhouette.
+       Long-hair triangles flowing down to the shoulders read as feminine-coded;
+       arms-akimbo (hands on hips) adds anatomical detail.
+       Violates icon-vocabulary.md "Profile / Account / Me" guidance:
+       "avoid gender-coded forms; circle avatar is safest." -->
+
+  <!-- Head -->
+  <circle cx="12" cy="6.5" r="3" />
+
+  <!-- Long hair: explicit triangles flowing from above the head down past the shoulders -->
+  <path d="M9 6 L7 14 L9.5 12.5 Z" />
+  <path d="M15 6 L17 14 L14.5 12.5 Z" />
+
+  <!-- Torso outline (V-shaped neckline + waist) -->
+  <path d="M9 10 L8 14 L8 18 L16 18 L16 14 L15 10" />
+
+  <!-- Arms-akimbo: hands on hips creating two triangular arm cavities -->
+  <path d="M8 14 L4 16 L7 17 L8 16" />
+  <path d="M16 14 L20 16 L17 17 L16 16" />
+
+  <!-- Hip line -->
+  <path d="M8 18 L16 18" />
+</svg>

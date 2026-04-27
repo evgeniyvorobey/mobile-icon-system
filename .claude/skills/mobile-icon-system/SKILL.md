@@ -20,6 +20,9 @@ When invoked:
    - `${CLAUDE_SKILL_DIR}/../../../references/icon-vocabulary.md`
    - `${CLAUDE_SKILL_DIR}/../../../references/cross-icon-consistency.md`
    - `${CLAUDE_SKILL_DIR}/../../../references/accessibility.md`
+   - `${CLAUDE_SKILL_DIR}/../../../references/craft-rubric.md`
+   - `${CLAUDE_SKILL_DIR}/../../../references/negative-space.md`
+   - `${CLAUDE_SKILL_DIR}/../../../references/aesthetic-principles.md`
    - `${CLAUDE_SKILL_DIR}/../../../references/platform-icon-specs.md`
    - `${CLAUDE_SKILL_DIR}/../../../references/icon-set-evaluation.md`
    - `${CLAUDE_SKILL_DIR}/../../../references/tab-bar-validation.md`

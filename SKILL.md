@@ -1,7 +1,7 @@
 ---
 name: mobile-icon-system
-version: 0.2.0
-description: Use when designing, refreshing, or auditing a brand-coherent UI icon set for a mobile app — covers the full app icon system (Tab Bar / Bottom Nav, action, system, media, status, communication, commerce, content, social, editing, time, location, security). Best for icon-set work that must inherit visual DNA from an existing logo or design system, stay consistent across the whole set, meet WCAG 2.2 accessibility, and ship as platform-ready iOS/Android assets — with optional Figma / Pencil MCP integration where available.
+version: 0.3.0
+description: Use when designing, refreshing, or auditing a brand-coherent UI icon set for a mobile app — covers the full app icon system (Tab Bar / Bottom Nav, action, system, media, status, communication, commerce, content, social, editing, time, location, security). Best for icon-set work that must inherit visual DNA from an existing logo or design system, stay consistent across the whole set, meet WCAG 2.2 accessibility, render at tier-A craft level (calibrated against a hand-curated reference corpus, generate-N-pick-1 variant search, mandatory second-eye critique loop), and ship as platform-ready iOS/Android assets — with optional Figma / Pencil MCP integration where available.
 ---
 
 # Mobile Icon System
@@ -94,19 +94,30 @@ For each icon needed across the full set (Tab Bar, action, system, media, status
 
 Output a vocabulary table the user can review before generation. For a full app icon set this typically covers 40–80 icons grouped by category.
 
-### 7. Generate the set
+### 7. Generate the set — variants then pick
 
-Generate icons in **one batch** — never one at a time. Each icon:
+Generate icons in **one batch** — never one at a time. Each icon must be produced as **3 distinct variants**, with the variations spanning at least two of these axes:
+- Primitive choice (e.g., Home as house silhouette vs geometric anchor; Search with circular vs elliptical lens)
+- Anchor distribution (denser/sparser path, different cusp placement)
+- Optical correction strength (conservative / standard / pronounced)
+- Terminal angle interpretation (exact perpendicular vs slight tangent)
+- Negative-space allocation (counter-form area shifts)
+
+For each variant:
 - Built on the agreed grid
 - Inherits Brand DNA
-- Outputs filled + outlined variants if both states are needed (Tab Bar)
-- Schematic SVG inline, no production polish yet
+- Filled + outlined per-state where Tab Bar is in scope
+- Inline schematic SVG, no production polish yet
 
-Read [references/concept-quality.md](references/concept-quality.md). Verify: meaning, silhouette, recognition at 20pt.
+After generating the 3 variants per icon, read [references/concept-quality.md](references/concept-quality.md), [references/craft-rubric.md](references/craft-rubric.md), [references/negative-space.md](references/negative-space.md), and [references/aesthetic-principles.md](references/aesthetic-principles.md). Apply the rubric to each variant. **Pick the winner per icon** with explicit per-axis reasoning ("variant 2 wins: 6 anchors vs 9, optical center 0.4pt above geometric, no trapped space below 4pt"). Present the winning set first; collapse the 2 runner-ups per icon into an appendix that the user can expand.
 
-### 8. Cross-icon consistency audit
+This is not optional. Standard tier may use 2 variants instead of 3 to control token cost; hi-end always generates 3+.
 
-Read [references/cross-icon-consistency.md](references/cross-icon-consistency.md). Verify across the set:
+### 8. Audit — consistency + second-eye critique
+
+Two mandatory passes before craft / evaluation. Both apply to the winning set chosen in step 7.
+
+**Pass A — Cross-icon consistency.** Read [references/cross-icon-consistency.md](references/cross-icon-consistency.md). Verify across the set:
 - Same stroke weight (with optical exceptions documented)
 - Same corner radius logic
 - Same terminal style
@@ -114,15 +125,17 @@ Read [references/cross-icon-consistency.md](references/cross-icon-consistency.md
 - Filled/outlined pairs share construction
 - Optical centering consistent
 
-Output: corrections made, remaining risks.
+**Pass B — Second-eye critique.** Step out of the brand context. Read the set as if you have never seen the Brand DNA, the icon-system rules, the user's brief. Read [references/craft-rubric.md](references/craft-rubric.md), [references/negative-space.md](references/negative-space.md), [references/aesthetic-principles.md](references/aesthetic-principles.md). Score every icon A/B/C on each rubric axis. For any axis scoring below B: **loop back to step 7** for that icon (regenerate variants, re-pick), not the whole set. Document the loop iterations in the audit output.
+
+Output: per-icon scorecard, corrections made, loop iterations, remaining risks.
 
 ### 9. Craft pass (hi-end only)
 
 > Standard tier skips to step 10. **Load craft files only at this step.**
 
-Read and run checklists: [geometric-craft.md](references/geometric-craft.md), [color-system.md](references/color-system.md).
+Read and run checklists: [geometric-craft.md](references/geometric-craft.md), [color-system.md](references/color-system.md), [craft-rubric.md](references/craft-rubric.md).
 
-Per-icon optical corrections, path cleanliness, anchor reduction, tangent continuity, pixel alignment at target sizes (16/20/24pt). Cross-icon: stroke optical balancing (visual weight match across set, not just numeric stroke equality).
+Per-icon optical corrections, path cleanliness, anchor reduction, tangent continuity, pixel alignment at target sizes (16/20/24pt). Cross-icon: stroke optical balancing (visual weight match across set, not just numeric stroke equality). For any icon that has a tier-A reference in [`assets/references/tier-A-craft/`](assets/references/), compare construction patterns and document where the output diverges and why.
 
 ### 10. Evaluate
 
@@ -177,9 +190,13 @@ Load only when needed:
 - [references/brand-dna-input.md](references/brand-dna-input.md) — Brand DNA ingestion
 - [references/design-tool-integrations.md](references/design-tool-integrations.md) — Figma / Pencil / generic MCP integration
 - [references/icon-grid-construction.md](references/icon-grid-construction.md) — grid + stroke rules
-- [references/icon-vocabulary.md](references/icon-vocabulary.md) — full-set metaphor library (13 categories)
+- [references/icon-vocabulary.md](references/icon-vocabulary.md) — full-set metaphor library (13 categories) with calibration-corpus references per metaphor
 - [references/cross-icon-consistency.md](references/cross-icon-consistency.md) — set balancing
+- [references/craft-rubric.md](references/craft-rubric.md) — numerical thresholds for craft grading (cited; loaded by phase 7 variant pick + phase 8 critique)
+- [references/negative-space.md](references/negative-space.md) — counter-form, trapped space, density rhythm (loaded by phase 5 + 7 + 8 + 9)
+- [references/aesthetic-principles.md](references/aesthetic-principles.md) — 10 principles (Vignelli, Rams, Müller-Brockmann; loaded by phase 5 + 9)
 - [references/accessibility.md](references/accessibility.md) — WCAG 2.2, touch targets, screen-reader labeling, color-blind safety
+- [assets/references/](assets/references/) — calibration corpus (tier-A / tier-B / tier-C SVGs with `.notes.md` craft observations; loaded by phase 7 variant pick and phase 9 craft pass)
 - [references/platform-icon-specs.md](references/platform-icon-specs.md) — iOS/Android specs
 - [references/icon-set-evaluation.md](references/icon-set-evaluation.md) — scoring
 - [references/tab-bar-validation.md](references/tab-bar-validation.md) — context testing
@@ -201,6 +218,8 @@ Load only when needed:
 
 Do not:
 - design icons one at a time when a set is requested — always think and balance across the whole set
+- generate only one variant per icon — produce 2-3 distinct variants and pick a winner per icon (step 7)
+- skip the second-eye critique pass (step 8 / Pass B) — the consistency audit alone does not catch craft regressions
 - skip the Brand DNA step — icons must inherit, not invent
 - skip the icon system rules gate — user must confirm grid / stroke / style / accessibility budget before generation
 - mix incompatible stroke weights or terminal styles in one set

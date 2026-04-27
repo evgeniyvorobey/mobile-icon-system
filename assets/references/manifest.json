@@ -1,0 +1,202 @@
+{
+  "custom_files": [
+    "tier-c/home-overdetailed.svg",
+    "tier-c/user-gendered.svg",
+    "tier-c/notification-color-state.svg"
+  ],
+  "entries": {
+    "tier-a/bell.svg": {
+      "bytes": 393,
+      "fetched_at": "2026-04-27T20:07:48.593886+00:00",
+      "license": "ISC",
+      "sha256": "394889e9631fe3a9a63be9a479a95b451b708e432d895978d21d9130b5ee5dbe",
+      "source": "Lucide",
+      "url": "https://raw.githubusercontent.com/lucide-icons/lucide/main/icons/bell.svg"
+    },
+    "tier-a/calendar.svg": {
+      "bytes": 330,
+      "fetched_at": "2026-04-27T20:07:49.750011+00:00",
+      "license": "ISC",
+      "sha256": "c5c59382ebf9c3c2ce6426bd9f36fdda7ef8f0a96bffb8d8316ab38dc4dcc982",
+      "source": "Lucide",
+      "url": "https://raw.githubusercontent.com/lucide-icons/lucide/main/icons/calendar.svg"
+    },
+    "tier-a/camera.svg": {
+      "bytes": 470,
+      "fetched_at": "2026-04-27T20:07:49.582337+00:00",
+      "license": "MIT",
+      "sha256": "1a4fb93f7c52d98c20fa60edca5c6c1e6d2bf7ded442832675c299ad4d688cb6",
+      "source": "Phosphor",
+      "url": "https://raw.githubusercontent.com/phosphor-icons/core/main/raw/regular/camera.svg"
+    },
+    "tier-a/chat.svg": {
+      "bytes": 347,
+      "fetched_at": "2026-04-27T20:07:49.904476+00:00",
+      "license": "ISC",
+      "sha256": "146f39740fe50844394d56ae1f8821937655bcfff3842bf6fe8ffc0bcd324076",
+      "source": "Lucide",
+      "url": "https://raw.githubusercontent.com/lucide-icons/lucide/main/icons/message-circle.svg"
+    },
+    "tier-a/check.svg": {
+      "bytes": 239,
+      "fetched_at": "2026-04-27T20:07:50.700356+00:00",
+      "license": "ISC",
+      "sha256": "7f33acc9a77a61659531044525fc008edebe215bf4dcf1c789c8674ad3277db0",
+      "source": "Lucide",
+      "url": "https://raw.githubusercontent.com/lucide-icons/lucide/main/icons/check.svg"
+    },
+    "tier-a/heart-filled.svg": {
+      "bytes": 316,
+      "fetched_at": "2026-04-27T20:07:49.324096+00:00",
+      "license": "MIT",
+      "sha256": "9aa15524a3b7b8a734aa1a2bc1c55d81dd31f07de3eb8a7f2e7c297f07c90943",
+      "source": "Phosphor",
+      "url": "https://raw.githubusercontent.com/phosphor-icons/core/main/raw/fill/heart-fill.svg"
+    },
+    "tier-a/heart-outlined.svg": {
+      "bytes": 373,
+      "fetched_at": "2026-04-27T20:07:49.034457+00:00",
+      "license": "ISC",
+      "sha256": "70af5f30be9fcb500b852556b38dcdf8c04a4ba81fd262534fb0336bd39b3b52",
+      "source": "Lucide",
+      "url": "https://raw.githubusercontent.com/lucide-icons/lucide/main/icons/heart.svg"
+    },
+    "tier-a/home-filled.svg": {
+      "bytes": 317,
+      "fetched_at": "2026-04-27T20:07:47.609223+00:00",
+      "license": "MIT",
+      "sha256": "7e238c84205ad3f044d7deb80a7313e018e24231a8e4dd47b5b9d45c3ab16c32",
+      "source": "Phosphor",
+      "url": "https://raw.githubusercontent.com/phosphor-icons/core/main/raw/fill/house-fill.svg"
+    },
+    "tier-a/home-outlined.svg": {
+      "bytes": 383,
+      "fetched_at": "2026-04-27T20:07:47.467074+00:00",
+      "license": "ISC",
+      "sha256": "28216c479005731ef5e382e7d8627eda2b129b019eb1f3d9de9f5915576d448e",
+      "source": "Lucide",
+      "url": "https://raw.githubusercontent.com/lucide-icons/lucide/main/icons/house.svg"
+    },
+    "tier-a/plus.svg": {
+      "bytes": 256,
+      "fetched_at": "2026-04-27T20:07:48.769317+00:00",
+      "license": "ISC",
+      "sha256": "7f6af73bf1ff6c4bca3f18351c8d1bdec6749c0c2530c4de5da85d520c21df17",
+      "source": "Lucide",
+      "url": "https://raw.githubusercontent.com/lucide-icons/lucide/main/icons/plus.svg"
+    },
+    "tier-a/search.svg": {
+      "bytes": 275,
+      "fetched_at": "2026-04-27T20:07:47.896563+00:00",
+      "license": "ISC",
+      "sha256": "283d371c2e433817bb9c0c8310caa6c77fa4177c0f4f1168d9c83b97af7389dc",
+      "source": "Lucide",
+      "url": "https://raw.githubusercontent.com/lucide-icons/lucide/main/icons/search.svg"
+    },
+    "tier-a/settings.svg": {
+      "bytes": 944,
+      "fetched_at": "2026-04-27T20:07:48.287681+00:00",
+      "license": "MIT",
+      "sha256": "d71136dfd83ad19efe1777d01768a5d23d7b295de5dde3b1fccc50806809a423",
+      "source": "Tabler Icons",
+      "url": "https://raw.githubusercontent.com/tabler/tabler-icons/main/icons/outline/settings.svg"
+    },
+    "tier-a/share.svg": {
+      "bytes": 318,
+      "fetched_at": "2026-04-27T20:07:50.279950+00:00",
+      "license": "ISC",
+      "sha256": "be8870646f636f4db03fd2d1d5db4912a1ab03ce2cfcc5daacc15fa8e105dbc2",
+      "source": "Lucide",
+      "url": "https://raw.githubusercontent.com/lucide-icons/lucide/main/icons/share.svg"
+    },
+    "tier-a/trash.svg": {
+      "bytes": 389,
+      "fetched_at": "2026-04-27T20:07:50.424167+00:00",
+      "license": "ISC",
+      "sha256": "27299f69ad7c6272be64b1b8e2d48cbd6dcf0ef0d4f92827a1affa945c91700e",
+      "source": "Lucide",
+      "url": "https://raw.githubusercontent.com/lucide-icons/lucide/main/icons/trash-2.svg"
+    },
+    "tier-a/user.svg": {
+      "bytes": 299,
+      "fetched_at": "2026-04-27T20:07:48.025873+00:00",
+      "license": "ISC",
+      "sha256": "eae3b3b2400031ddd5ec869327d127a96014e5f63aa6e06658dd5d4e90661aa8",
+      "source": "Lucide",
+      "url": "https://raw.githubusercontent.com/lucide-icons/lucide/main/icons/user.svg"
+    },
+    "tier-a/x.svg": {
+      "bytes": 260,
+      "fetched_at": "2026-04-27T20:07:50.855286+00:00",
+      "license": "ISC",
+      "sha256": "4a9cdab38fbb96162e7dace28e33f4ca0e49d8963a6162abc3d4691b7d675117",
+      "source": "Lucide",
+      "url": "https://raw.githubusercontent.com/lucide-icons/lucide/main/icons/x.svg"
+    },
+    "tier-b/camera-decorative.svg": {
+      "bytes": 726,
+      "fetched_at": "2026-04-27T20:07:52.261212+00:00",
+      "license": "MIT",
+      "sha256": "845c6120bc9457b4e9597138be52f8812f1850a9e955e28292b4ab3ec3074201",
+      "source": "Heroicons",
+      "url": "https://raw.githubusercontent.com/tailwindlabs/heroicons/master/optimized/24/outline/camera.svg"
+    },
+    "tier-b/heart-symmetric.svg": {
+      "bytes": 376,
+      "fetched_at": "2026-04-27T20:07:51.663489+00:00",
+      "license": "MIT",
+      "sha256": "831a60fdfd1a900dad099b77f4335291cc0d49ed7d890039c7a8a784318fea7b",
+      "source": "Heroicons",
+      "url": "https://raw.githubusercontent.com/tailwindlabs/heroicons/master/optimized/24/outline/heart.svg"
+    },
+    "tier-b/home-outlined.svg": {
+      "bytes": 453,
+      "fetched_at": "2026-04-27T20:07:51.110728+00:00",
+      "license": "MIT",
+      "sha256": "bf22818e3638f217e824ff26c8ffaf2ef014803982ca7c430e6c3c20915b185a",
+      "source": "Heroicons",
+      "url": "https://raw.githubusercontent.com/tailwindlabs/heroicons/master/optimized/24/outline/home.svg"
+    },
+    "tier-b/search.svg": {
+      "bytes": 296,
+      "fetched_at": "2026-04-27T20:07:51.274259+00:00",
+      "license": "MIT",
+      "sha256": "3566eaf416d279baea18ebc5ccb5a9500f646a1afd42d1dc04f48581e24797eb",
+      "source": "Heroicons",
+      "url": "https://raw.githubusercontent.com/tailwindlabs/heroicons/master/optimized/24/outline/magnifying-glass.svg"
+    },
+    "tier-b/settings-bezier.svg": {
+      "bytes": 586,
+      "fetched_at": "2026-04-27T20:07:51.406378+00:00",
+      "license": "ISC",
+      "sha256": "0ae27fd0f81999229e3127ac96c5b32edfea448e291d509e76212b917551d66b",
+      "source": "Lucide",
+      "url": "https://raw.githubusercontent.com/lucide-icons/lucide/main/icons/settings.svg"
+    },
+    "tier-b/share-graph.svg": {
+      "bytes": 480,
+      "fetched_at": "2026-04-27T20:07:52.076260+00:00",
+      "license": "MIT",
+      "sha256": "036b1908bbb0c4ae0f95a980a52b71a02396ef1851b75b8ee9d986aefcfbf55c",
+      "source": "Heroicons",
+      "url": "https://raw.githubusercontent.com/tailwindlabs/heroicons/master/optimized/24/outline/share.svg"
+    },
+    "tier-c/calendar-overdetailed.svg": {
+      "bytes": 980,
+      "fetched_at": "2026-04-27T20:07:52.407675+00:00",
+      "license": "MIT",
+      "sha256": "8429569ba11344ff12b1af62bd7d8d846b708b827fc71659918c1d5da991b943",
+      "source": "Phosphor",
+      "url": "https://raw.githubusercontent.com/phosphor-icons/core/main/raw/regular/calendar.svg"
+    },
+    "tier-c/settings-12tooth.svg": {
+      "bytes": 752,
+      "fetched_at": "2026-04-27T20:07:52.685682+00:00",
+      "license": "Apache-2.0",
+      "sha256": "6aebb4a88b40a5bf1ce378ca532e4a885aedc402a0574562c6ed4ded03360fd2",
+      "source": "Material Symbols",
+      "url": "https://raw.githubusercontent.com/google/material-design-icons/master/symbols/web/settings/materialsymbolsoutlined/settings_24px.svg"
+    }
+  },
+  "generated": "2026-04-27T20:07:52.685709+00:00"
+}
