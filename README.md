@@ -1,10 +1,10 @@
 # Mobile Icon System Skill
 
-**Current version: 0.5.0** | [Changelog](CHANGELOG.md) | [Migration guide](MIGRATION.md)
+**Current version: 0.6.0** | [Changelog](CHANGELOG.md) | [Migration guide](MIGRATION.md)
 
 A self-contained AI skill for Codex and Claude that designs, refines, audits, motion-enables, client-reviews, and packages the **full brand icon set** for a mobile app — Tab Bar / Bottom Nav, action, system, media, status, communication, commerce, content, social, editing, time, location, and security icons — all inheriting one Brand DNA, validated for WCAG 2.2 accessibility and grade-checked against a hand-curated craft rubric, and shipped as platform-ready iOS/Android assets.
 
-It is built for real product UI work, not generic icon-pack generation. The skill is fully standalone — it does not depend on any other skill or external generator — integrates with Figma and Pencil MCP servers when available, ships a calibration corpus of tier-A/B/C reference icons so generators can compare instead of guess, includes render-and-grade pipelines that rasterize SVG output and measure it against numerical thresholds, supports custom `.style-pack` plugins, adds a separate Animated/Lottie motion subsystem, and falls back to filesystem-only mode when no design-tool MCP is connected.
+It is built for real product UI work, not generic icon-pack generation. The skill is fully standalone — it does not depend on any other skill or external generator — integrates with Figma and Pencil MCP servers when available, ships a calibration corpus of tier-A/B/C reference icons so generators can compare instead of guess, includes render-and-grade pipelines that rasterize SVG output and measure it against numerical thresholds, supports custom `.style-pack` plugins and a registry, adds a separate Animated/Lottie motion subsystem with asset validation, automates conservative platform export scaffolding, and falls back to filesystem-only mode when no design-tool MCP is connected.
 
 ## Contents
 
@@ -31,8 +31,9 @@ It is built for real product UI work, not generic icon-pack generation. The skil
 5. generate the full brand icon set in one batch, balanced across the row, covering every category in scope — or generate the same set in three visual styles for A/B/C client review
 6. run a cross-icon consistency audit and a WCAG 2.2 accessibility audit
 7. evaluate the set on icon-specific dimensions and validate in real Tab Bar / Bottom Nav / action / status surfaces
-8. create and validate animated-icon motion specs with static reduced-motion fallbacks when motion is in scope
-9. scaffold a real handoff package with platform-ready exports, accessibility notes, motion notes, and design-tool handoff (Figma Code Connect / Pencil exports) when an MCP is connected
+8. create and validate animated-icon motion specs, Lottie/dotLottie assets, and static reduced-motion fallbacks when motion is in scope
+9. render multi-style contact sheets, scaffold platform exports, and compare approved PNG baselines when review or release QA needs it
+10. scaffold a real handoff package with platform-ready exports, accessibility notes, motion notes, and design-tool handoff or write-back planning when an MCP is connected
 
 ## What It Is Not
 
@@ -52,14 +53,17 @@ It is built for real product UI work, not generic icon-pack generation. The skil
 - Project-first UI audit using local screenshots, design boards, color tokens, current icon set, or design-tool MCP
 - Icon system rules definition with mandatory user-confirmation gate before mass generation
 - Set-level generation with cross-icon consistency built in
-- **Multi-style parallel generation** — one set in three visual styles for A/B/C client review, with shared vocabulary and decision logging via [`references/multi-style-review.md`](references/multi-style-review.md) and [`scripts/init_multi_style_review.py`](scripts/init_multi_style_review.py)
-- **Style-pack plugins** — user `.style-pack` manifests validated with [`scripts/validate_style_pack.py`](scripts/validate_style_pack.py) before custom construction rules enter the Phase 5 gate
-- **Animated/Lottie subsystem** — separate motion specs, easing, static frames, and reduced-motion fallback validation via [`references/motion-system.md`](references/motion-system.md) and [`scripts/validate_motion_spec.py`](scripts/validate_motion_spec.py)
+- **Multi-style parallel generation** — one set in three visual styles for A/B/C client review, with shared vocabulary, decision logging, and generated HTML contact sheets via [`references/multi-style-review.md`](references/multi-style-review.md), [`scripts/init_multi_style_review.py`](scripts/init_multi_style_review.py), and [`scripts/render_multi_style_contact_sheet.py`](scripts/render_multi_style_contact_sheet.py)
+- **Style-pack plugins and registry** — user `.style-pack` manifests validated with [`scripts/validate_style_pack.py`](scripts/validate_style_pack.py) before custom construction rules enter the Phase 5 gate; discoverable entries are indexed with [`scripts/build_style_pack_registry.py`](scripts/build_style_pack_registry.py)
+- **Animated/Lottie subsystem** — separate motion specs, easing, static frames, reduced-motion fallback validation, and Lottie/dotLottie asset hygiene via [`references/motion-system.md`](references/motion-system.md), [`references/lottie-asset-validation.md`](references/lottie-asset-validation.md), [`scripts/validate_motion_spec.py`](scripts/validate_motion_spec.py), and [`scripts/validate_lottie_assets.py`](scripts/validate_lottie_assets.py)
 - Live research workflow for Apple HIG Tab Bar, Material 3 Bottom Nav, and WCAG amendments
 - 8-dimension icon-set evaluation matrix
 - Tab Bar / Bottom Nav context validation with selected and unselected states
 - Hi-end craft pass: per-icon optical correction, cross-icon stroke balancing, path cleanliness
 - **Expanded shipped style packs** — Liquid Glass, chromatic duotone, claymorphism, 3D/isometric, pixel-art, and hand-drawn; pixel-art adds bitmap-aware checks and hand-drawn uses deterministic path jitter
+- **Platform export automation** — conservative path-only SVG to Android VectorDrawable XML plus iOS PDF-backed `.xcassets` scaffolding via [`scripts/export_platform_assets.py`](scripts/export_platform_assets.py)
+- **Design-tool write-back planning** — safe Figma/Pencil/Code Connect handoff scaffolding that records whether real MCP write-back happened via [`references/design-tool-writeback.md`](references/design-tool-writeback.md) and [`scripts/scaffold_design_tool_handoff.py`](scripts/scaffold_design_tool_handoff.py)
+- **Demo package and visual regression** — a compact example package in [`assets/demo-package/`](assets/demo-package/) plus PNG baseline comparison via [`scripts/visual_regression_contact_sheet.py`](scripts/visual_regression_contact_sheet.py)
 - Production package scaffolding via [`scripts/init_icon_system_package.py`](scripts/init_icon_system_package.py)
 - Repository validation via [`scripts/validate_skill_repo.py`](scripts/validate_skill_repo.py)
 
@@ -194,6 +198,7 @@ mobile-icon-system/
 │   ├── creative-divergence.md          # broader rule-set range when category feels generic
 │   ├── cross-icon-consistency.md       # set-level balancing rules
 │   ├── design-tool-integrations.md     # Figma MCP, Pencil MCP, generic MCP guidance
+│   ├── design-tool-writeback.md        # Figma/Pencil write-back provenance and handoff scaffold
 │   ├── evaluation.md                   # generic evaluation framework
 │   ├── example-requests.md             # realistic request patterns
 │   ├── example-responses.md            # gold-standard answer shape
@@ -203,9 +208,11 @@ mobile-icon-system/
 │   ├── icon-set-evaluation.md          # 8-dimension set scoring matrix
 │   ├── icon-vocabulary.md              # full-set metaphor library, 13 categories
 │   ├── live-research.md                # platform watchlists
+│   ├── lottie-asset-validation.md      # Lottie JSON + dotLottie asset hygiene
 │   ├── motion-system.md                # Animated/Lottie subsystem, easing, reduced-motion validation
 │   ├── multi-style-review.md           # A/B/C client review workflow
 │   ├── package-spec.md                 # final deliverables spec
+│   ├── platform-export-automation.md   # Android/iOS export automation limits and CLI
 │   ├── platform-icon-specs.md          # iOS Tab Bar + Android Bottom Nav specs
 │   ├── production-resources.md         # scaffolding and handoff file guidance
 │   ├── project-audit.md                # current UI snapshot
@@ -213,8 +220,12 @@ mobile-icon-system/
 │   ├── sources.md                      # source map and authority order
 │   ├── tab-bar-validation.md           # in-context Tab Bar / Bottom Nav testing
 │   ├── workflow.md                     # full workflow phases
+│   ├── visual-regression.md            # rendered PNG baseline comparison workflow
 │   └── style-packs/                    # built-in and plugin visual style specs
 ├── assets/
+│   ├── demo-package/                   # compact generated example package
+│   ├── design-tool-handoff-template/   # Figma/Pencil/Code Connect handoff templates
+│   ├── style-pack-registry/            # generated style discovery index
 │   └── package-template/
 │       ├── reviews/                    # project-ui-snapshot, icon-system-rules, concept-scorecard, cross-icon-audit
 │       └── selected/                   # rationale, usage-guidance, tab-bar-icon-notes, bottom-nav-notes, export-checklist
@@ -222,9 +233,15 @@ mobile-icon-system/
     ├── install_skill.py                # install into Codex and/or Claude projects
     ├── init_icon_system_package.py     # scaffold handoff package from templates
     ├── init_multi_style_review.py      # scaffold A/B/C style review packages
+    ├── render_multi_style_contact_sheet.py # render A/B/C HTML contact sheets
+    ├── export_platform_assets.py       # Android VectorDrawable + iOS xcassets scaffolding
+    ├── scaffold_design_tool_handoff.py # safe Figma/Pencil/Code Connect handoff package
+    ├── build_style_pack_registry.py    # build style-pack discovery registry
     ├── validate_motion_spec.py         # validate animated-icon motion specs
+    ├── validate_lottie_assets.py       # validate Lottie JSON + dotLottie packages
     ├── validate_style_pack.py          # validate user .style-pack manifests
     ├── apply_path_jitter.py            # deterministic hand-drawn path jitter
+    ├── visual_regression_contact_sheet.py # compare rendered PNG baselines
     ├── render_icon_contact_sheet.py    # render icon set contact sheet (HTML + SVG)
     ├── validate_skill_repo.py          # validate repo structure and relative links
     ├── smoke_test_contact_sheet_browser.py # browser visual smoke test
@@ -259,8 +276,15 @@ python3 scripts/smoke_test_contact_sheet_browser.py  # browser visual smoke test
 python3 scripts/smoke_test_package_scaffold.py # package scaffold smoke test
 python3 scripts/smoke_test_multi_style_review.py # A/B/C review scaffold smoke test
 python3 scripts/smoke_test_motion_spec.py      # motion spec validator smoke test
+python3 scripts/smoke_test_lottie_assets.py    # Lottie/dotLottie asset validator smoke test
 python3 scripts/smoke_test_style_pack_plugin.py # .style-pack plugin validator smoke test
+python3 scripts/smoke_test_style_pack_registry.py # style-pack registry smoke test
 python3 scripts/smoke_test_path_jitter.py      # deterministic path-jitter smoke test
+python3 scripts/smoke_test_multi_style_contact_sheet.py # A/B/C contact sheet smoke test
+python3 scripts/smoke_test_platform_exports.py # Android/iOS export automation smoke test
+python3 scripts/smoke_test_design_tool_handoff.py # design-tool handoff scaffold smoke test
+python3 scripts/smoke_test_demo_package.py     # generated demo package smoke test
+python3 scripts/smoke_test_visual_regression.py # PNG baseline comparator smoke test
 python3 scripts/smoke_test_grade_bitmap.py     # pixel-art bitmap grader smoke test
 python3 scripts/install_skill.py --help        # installer options
 ```
@@ -285,8 +309,8 @@ See the full prompt library: [`references/prompt-library.md`](references/prompt-
 6. let it run cross-icon consistency audit and the WCAG 2.2 accessibility audit; surface corrections
 7. if hi-end: run the craft pass (geometric construction, optical corrections, color craft, themed-palette pass)
 8. validate in Tab Bar / Bottom Nav and adjacent surface contexts with both states, plus the accessibility checklist (contrast, touch targets, color-blind simulation, Dynamic Type, reduced motion)
-9. when icons animate, validate the motion spec before Lottie/dotLottie handoff
-10. once a direction is validated, scaffold or fill the handoff package — including accessibility notes, motion notes, style-plugin manifests, and design-tool handoff (Figma Code Connect / Pencil exports) when MCP is connected
+9. when icons animate, validate the motion spec and exported Lottie/dotLottie assets before handoff
+10. once a direction is validated, scaffold or fill the handoff package — including accessibility notes, motion notes, style-plugin manifests, platform export artifacts, and design-tool write-back plans when MCP is connected
 
 ## Compatibility
 

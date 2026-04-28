@@ -53,6 +53,19 @@ When a pack conflicts with Brand DNA, **Brand DNA wins by default**. Each pack's
 
 Surface the conflict in Phase 5; ask the user to override Brand DNA explicitly. Log the override in the rules document so downstream phases audit against it.
 
+## Registry
+
+Build the discovery registry for shipped packs and validated plugins with:
+
+```bash
+python3 ../../scripts/build_style_pack_registry.py
+```
+
+The registry reference lives in [`registry.md`](registry.md), and the generated
+JSON lives at [`../../assets/style-pack-registry/registry.json`](../../assets/style-pack-registry/registry.json).
+It is a discovery index only; Phase 5 Brand DNA conflict review, accessibility
+review, and user confirmation still gate every non-default style.
+
 ## v0.5 style register
 
 The v0.5 decision record lives in [`deferred-styles.md`](deferred-styles.md). Summary:

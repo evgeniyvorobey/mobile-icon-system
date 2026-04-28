@@ -2,6 +2,66 @@
 
 This document captures step-by-step upgrade instructions between major and minor versions of `mobile-icon-system`.
 
+## 0.5.0 → 0.6.0
+
+The v0.6 release adds production-integration tooling around the v0.5 motion and style systems: Lottie/dotLottie asset validation, rendered A/B/C contact sheets, Android/iOS export scaffolding, style-pack registry discovery, design-tool write-back planning, visual regression, a demo package, and a small custom corpus expansion. Existing static, motion-spec, plugin, and multi-style prompts remain compatible.
+
+### What you should do
+
+1. **Re-install** to pick up the new references, templates, and scripts:
+   ```bash
+   python3 scripts/install_skill.py --codex --force
+   python3 scripts/install_skill.py --claude-project /path/to/your/project --force
+   ```
+2. **Run the expanded validation suite**:
+   ```bash
+   python3 scripts/validate_skill_repo.py
+   python3 scripts/smoke_test_lottie_assets.py
+   python3 scripts/smoke_test_multi_style_contact_sheet.py
+   python3 scripts/smoke_test_platform_exports.py
+   python3 scripts/smoke_test_style_pack_registry.py
+   python3 scripts/smoke_test_design_tool_handoff.py
+   python3 scripts/smoke_test_demo_package.py
+   python3 scripts/smoke_test_reference_corpus_v06.py
+   ```
+3. **Validate Lottie/dotLottie exports** after the motion spec passes:
+   ```bash
+   python3 scripts/validate_motion_spec.py motion/motion-spec.json
+   python3 scripts/validate_lottie_assets.py motion/lottie motion/dotlottie
+   ```
+4. **Render A/B/C contact sheets** after all candidate style folders have matching SVG stems:
+   ```bash
+   python3 scripts/render_multi_style_contact_sheet.py ./multi-style-review \
+     --output ./multi-style-review/review/contact-sheet.html
+   ```
+5. **Scaffold platform exports** from path-only SVG masters:
+   ```bash
+   python3 scripts/export_platform_assets.py ./icon-system/exports/svg-masters --platform both
+   ```
+6. **Create design-tool handoff plans** when a connected MCP is unavailable or write-back needs review:
+   ```bash
+   python3 scripts/scaffold_design_tool_handoff.py ./icon-system/design-tool-handoff \
+     --project-name "Project Name" \
+     --handoff-mode mixed
+   ```
+
+### What changed in outputs
+
+- Multi-style review packages can now include a generated `review/contact-sheet.html`.
+- Motion packages should include both motion-spec validation and Lottie/dotLottie asset-validation evidence.
+- Production packages can include Android VectorDrawable XML, iOS `.xcassets` scaffolds, visual-regression reports, and design-tool handoff plans.
+- Style-pack discovery can be tracked with `assets/style-pack-registry/registry.json`.
+
+### Breaking changes
+
+None. New tools are additive and opt-in. The platform exporter is intentionally strict and may fail on SVGs that render fine in a browser but are not safe to map to Android VectorDrawable without flattening.
+
+### Known v0.6 limitations
+
+- `validate_lottie_assets.py` validates asset structure and rejects risky mobile-icon features; it does not render pixels or prove renderer parity.
+- `export_platform_assets.py` does not convert SVG to iOS PDF. It requires same-stem vector PDFs or writes placeholder manifests only when explicitly requested.
+- Visual regression requires project-owned PNG baselines. The skill repo does not ship approved visual baselines for your app.
+
 ## 0.4.0 → 0.5.0
 
 The v0.5 release adds optional subsystems for Animated/Lottie motion, user `.style-pack` plugins, three-style A/B/C client review, and three shipped style packs (3D/isometric, pixel-art, hand-drawn). Static icon workflows from v0.4 remain compatible.

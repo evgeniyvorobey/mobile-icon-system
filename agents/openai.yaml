@@ -1,8 +1,8 @@
 interface:
   display_name: "Mobile Icon System"
-  short_description: "Self-contained workflow for mobile app icon systems: full static sets, style packs/plugins, A/B/C style review, and Animated/Lottie motion specs — WCAG 2.2 accessible, Figma/Pencil MCP integrated"
+  short_description: "Self-contained workflow for mobile app icon systems: full static sets, style packs/plugins, A/B/C review, platform exports, and Animated/Lottie validation — WCAG 2.2 accessible, Figma/Pencil MCP integrated"
   brand_color: "#3F7FCF"
-  default_prompt: "Use $mobile-icon-system to inspect the current app UI (via Figma MCP, Pencil MCP, or filesystem), ingest Brand DNA, define icon system rules including the accessibility budget, and generate the full brand icon set across every category in scope. Confirm the rules with me before generating, run cross-icon consistency and WCAG 2.2 accessibility audits after generation, validate in real Tab Bar / Bottom Nav and adjacent surface contexts, and use motion specs, style-pack plugins, or A/B/C style review when the brief calls for them."
+  default_prompt: "Use $mobile-icon-system to inspect the current app UI (via Figma MCP, Pencil MCP, or filesystem), ingest Brand DNA, define icon system rules including the accessibility budget, and generate the full brand icon set across every category in scope. Confirm the rules with me before generating, run cross-icon consistency and WCAG 2.2 accessibility audits after generation, validate in real Tab Bar / Bottom Nav and adjacent surface contexts, and use motion validation, style-pack plugins, A/B/C contact sheets, platform export scaffolding, or design-tool handoff planning when the brief calls for them."
 
 policy:
   allow_implicit_invocation: true

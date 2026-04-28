@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true">
+  <polygon points="12 3 20 7.5 12 12 4 7.5" fill="currentColor" opacity=".92"/>
+  <polygon points="4 7.5 12 12 12 21 4 16.5" fill="currentColor" opacity=".62"/>
+  <polygon points="20 7.5 12 12 12 21 20 16.5" fill="currentColor" opacity=".78"/>
+  <path d="M12 3 20 7.5 20 16.5 12 21 4 16.5 4 7.5 12 3Z" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linejoin="round"/>
+  <path d="M4 7.5 12 12 20 7.5M12 12v9" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" opacity=".72"/>
+</svg>

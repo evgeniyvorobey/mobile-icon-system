@@ -1,6 +1,6 @@
 ---
 name: mobile-icon-system
-description: Self-contained workflow for mobile app icon systems — full static icon sets, style packs/plugins, A/B/C style review, and Animated/Lottie motion specs. WCAG 2.2 accessible. Integrates with Figma / Pencil MCP when available. Use directly in Codex with /mobile-icon-system.
+description: Self-contained workflow for mobile app icon systems — full static icon sets, style packs/plugins, A/B/C style review, platform exports, and Animated/Lottie validation. WCAG 2.2 accessible. Integrates with Figma / Pencil MCP when available. Use directly in Codex with /mobile-icon-system.
 argument-hint: "[task / icon set / refresh / audit request]"
 disable-model-invocation: true
 ---
@@ -16,12 +16,14 @@ When invoked:
    - `${CLAUDE_SKILL_DIR}/../../../references/project-audit.md`
    - `${CLAUDE_SKILL_DIR}/../../../references/brand-dna-input.md`
    - `${CLAUDE_SKILL_DIR}/../../../references/design-tool-integrations.md`
+   - `${CLAUDE_SKILL_DIR}/../../../references/design-tool-writeback.md`
    - `${CLAUDE_SKILL_DIR}/../../../references/icon-grid-construction.md`
    - `${CLAUDE_SKILL_DIR}/../../../references/icon-vocabulary.md`
    - `${CLAUDE_SKILL_DIR}/../../../references/domain-metaphors/` (load matched domain file + `_cross-domain.md` only when phase 4 matches a domain)
    - `${CLAUDE_SKILL_DIR}/../../../references/cross-icon-consistency.md`
    - `${CLAUDE_SKILL_DIR}/../../../references/accessibility.md`
    - `${CLAUDE_SKILL_DIR}/../../../references/motion-system.md` (load only when animated icons, Lottie, dotLottie, or reduced-motion validation is in scope)
+   - `${CLAUDE_SKILL_DIR}/../../../references/lottie-asset-validation.md` (load only when Lottie/dotLottie assets are produced or audited)
    - `${CLAUDE_SKILL_DIR}/../../../references/craft-rubric.md`
    - `${CLAUDE_SKILL_DIR}/../../../references/negative-space.md`
    - `${CLAUDE_SKILL_DIR}/../../../references/aesthetic-principles.md`
@@ -35,7 +37,10 @@ When invoked:
    - `${CLAUDE_SKILL_DIR}/../../../references/creative-divergence.md`
    - `${CLAUDE_SKILL_DIR}/../../../references/example-responses.md`
    - `${CLAUDE_SKILL_DIR}/../../../references/package-spec.md`
+   - `${CLAUDE_SKILL_DIR}/../../../references/platform-export-automation.md`
    - `${CLAUDE_SKILL_DIR}/../../../references/multi-style-review.md` (load only for A/B/C or three-style client review)
+   - `${CLAUDE_SKILL_DIR}/../../../references/visual-regression.md`
+   - `${CLAUDE_SKILL_DIR}/../../../references/demo-package.md`
    - `${CLAUDE_SKILL_DIR}/../../../references/style-packs/plugin-system.md` (load only for user `.style-pack` manifests)
    - `${CLAUDE_SKILL_DIR}/../../../references/production-resources.md`
    - `${CLAUDE_SKILL_DIR}/../../../references/geometric-craft.md`

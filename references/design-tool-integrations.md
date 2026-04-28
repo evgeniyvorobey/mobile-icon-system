@@ -54,6 +54,12 @@ When the icon set is validated and ready for handoff:
 - Document the mapping in the package's `usage-guidance.md`
 - Prefer Code Connect over re-uploading SVGs — designers usually want their components, not parallel files
 
+For any write-back or handoff plan, also read
+[`design-tool-writeback.md`](design-tool-writeback.md). It defines the evidence
+levels that distinguish actual Figma/Pencil MCP writes from filesystem-only
+handoff scaffolds. Use `scripts/scaffold_design_tool_handoff.py` when a plan or
+operator handoff is needed before live tool mutation.
+
 ### Authentication
 
 Some Figma MCPs require an auth flow (`authenticate` → `complete_authentication`). Run authentication only when needed; never trigger it speculatively. If the user has not connected Figma, state that and continue in filesystem-only mode.

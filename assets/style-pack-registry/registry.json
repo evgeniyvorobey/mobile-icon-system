@@ -1,0 +1,145 @@
+{
+  "schemaVersion": "1.0.0",
+  "generatedBy": "scripts/build_style_pack_registry.py",
+  "purpose": "Discovery index for built-in Markdown style packs and validated plugin manifests. This is not a runtime loader.",
+  "phaseGate": {
+    "phase": "Phase 5",
+    "summary": "Registry entries do not authorize automatic application. Brand DNA conflicts, accessibility implications, and user confirmation still gate every non-default style."
+  },
+  "entryCount": 6,
+  "entries": [
+    {
+      "id": "3d-isometric",
+      "name": "3D / Isometric",
+      "status": "shipped",
+      "sourceType": "builtin",
+      "path": "references/style-packs/3d-isometric.md",
+      "categories": [
+        "dimensional"
+      ],
+      "tags": [
+        "axonometric",
+        "flat-fills",
+        "depth",
+        "small-size-fallback"
+      ],
+      "refuseIf": {
+        "summary": "Refuse when Brand DNA requires stroke-only icons, flat monochrome template tinting with no baked colors, or no decorative depth. Refuse when the icon must communicate its state through a single platform tint only, because face shading will be stripped or recolored inconsistently. Refuse for sets whose primary target size is 16pt unless the user accepts the documented flat fallback for all small contexts.",
+        "items": [
+          "Refuse when Brand DNA requires stroke-only icons, flat monochrome template tinting with no baked colors, or no decorative depth. Refuse when the icon must communicate its state through a single platform tint only, because face shading will be stripped or recolored inconsistently. Refuse for sets whose primary target size is 16pt unless the user accepts the documented flat fallback for all small contexts."
+        ]
+      }
+    },
+    {
+      "id": "claymorphism",
+      "name": "Claymorphism",
+      "status": "shipped",
+      "sourceType": "builtin",
+      "path": "references/style-packs/claymorphism.md",
+      "categories": [
+        "tactile"
+      ],
+      "tags": [
+        "pastel",
+        "rounded",
+        "shadow",
+        "svg-filter"
+      ],
+      "refuseIf": {
+        "summary": "brand demands sharp corners or stroked icons. The user can override their Brand DNA explicitly in phase 5, but the skill must not make that call silently.",
+        "items": [
+          "brand demands sharp corners or stroked icons. The user can override their Brand DNA explicitly in phase 5, but the skill must not make that call silently."
+        ]
+      }
+    },
+    {
+      "id": "duotone-chromatic",
+      "name": "Chromatic Duotone",
+      "status": "shipped",
+      "sourceType": "builtin",
+      "path": "references/style-packs/duotone-chromatic.md",
+      "categories": [
+        "duotone"
+      ],
+      "tags": [
+        "two-color",
+        "brand-tokens",
+        "svg",
+        "flat-fill"
+      ],
+      "refuseIf": {
+        "summary": "the brand has only one color in its palette. Fall back to `duotone-monochrome` and surface the conflict in phase 5.",
+        "items": [
+          "the brand has only one color in its palette. Fall back to `duotone-monochrome` and surface the conflict in phase 5."
+        ]
+      }
+    },
+    {
+      "id": "hand-drawn",
+      "name": "Hand-Drawn",
+      "status": "shipped",
+      "sourceType": "builtin",
+      "path": "references/style-packs/hand-drawn.md",
+      "categories": [
+        "organic"
+      ],
+      "tags": [
+        "seeded-jitter",
+        "vector",
+        "expressive",
+        "reproducible"
+      ],
+      "refuseIf": {
+        "summary": "Refuse when Brand DNA requires strict geometry, perfect symmetry, crisp technical precision, or exact matching to SF Symbols / Material Symbols. Refuse when the build or design pipeline will regenerate jitter on every export. Any per-run random drift is a hard fail. Refuse when the icon set cannot tolerate slightly larger visual variance across icons. Hand-drawn needs a stronger cross-icon audit than flat geometric styles.",
+        "items": [
+          "Refuse when Brand DNA requires strict geometry, perfect symmetry, crisp technical precision, or exact matching to SF Symbols / Material Symbols. Refuse when the build or design pipeline will regenerate jitter on every export. Any per-run random drift is a hard fail. Refuse when the icon set cannot tolerate slightly larger visual variance across icons. Hand-drawn needs a stronger cross-icon audit than flat geometric styles."
+        ]
+      }
+    },
+    {
+      "id": "liquid-glass",
+      "name": "Liquid Glass",
+      "status": "shipped",
+      "sourceType": "builtin",
+      "path": "references/style-packs/liquid-glass.md",
+      "categories": [
+        "material"
+      ],
+      "tags": [
+        "ios",
+        "gradient",
+        "launcher",
+        "platform-native"
+      ],
+      "refuseIf": {
+        "summary": "brand is anti-gradient by declaration (e.g., Vignelli-discipline minimal brands). Surface the conflict in phase 5 and ask the user to override their Brand DNA explicitly before proceeding.",
+        "items": [
+          "brand is anti-gradient by declaration (e.g., Vignelli-discipline minimal brands). Surface the conflict in phase 5 and ask the user to override their Brand DNA explicitly before proceeding."
+        ]
+      }
+    },
+    {
+      "id": "pixel-art",
+      "name": "Pixel Art",
+      "status": "shipped",
+      "sourceType": "builtin",
+      "path": "references/style-packs/pixel-art.md",
+      "categories": [
+        "bitmap"
+      ],
+      "tags": [
+        "pixel-grid",
+        "nearest-neighbor",
+        "binary-alpha",
+        "small-size"
+      ],
+      "refuseIf": {
+        "summary": "Refuse when Brand DNA requires smooth curves, calligraphic strokes, translucent material, continuous gradients, or platform-template tinting that must preserve antialiased vector edges. Refuse when the team cannot ship bitmap or bitmap-equivalent assets with nearest-neighbor scaling. If the delivery pipeline will optimize every icon into antialiased vector paths, this pack cannot hold.",
+        "items": [
+          "Refuse when Brand DNA requires smooth curves, calligraphic strokes, translucent material, continuous gradients, or platform-template tinting that must preserve antialiased vector edges. Refuse when the team cannot ship bitmap or bitmap-equivalent assets with nearest-neighbor scaling. If the delivery pipeline will optimize every icon into antialiased vector paths, this pack cannot hold."
+        ]
+      }
+    }
+  ],
+  "duplicateIds": {}
+}

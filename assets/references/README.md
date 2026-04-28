@@ -31,6 +31,23 @@ skill names without diluting the signal.
   Lucide) so the LLM sees competent-but-flawed examples from a
   cross-section of the ecosystem.
 
+## Additive custom coverage (v0.6)
+
+The [`custom-v06/`](custom-v06/) directory adds compact original calibration
+anchors for style and motion cases that are not represented by the
+upstream-fetched SVG corpus. These files are **not upstream-fetched material**:
+they are repo-authored MIT-licensed assets with sibling `.notes.md` files that
+document structure observations, generator lessons, and provenance.
+
+The v0.6 additive set currently covers:
+
+- pixel-art small-size construction (`pixel-bolt-16.svg`);
+- 3D/isometric planar construction (`isometric-cube-24.svg`);
+- deterministic hand-drawn path jitter (`jitter-pencil-24.svg`, seed
+  `v06-jitter-pencil-24-seed-137`);
+- a motion/static reduced-motion fallback pair (`motion-pulse.json` and
+  `motion-pulse-static.svg`).
+
 ## Tier definitions
 
 | Tier | Meaning | What the LLM does with it |
@@ -95,13 +112,17 @@ repo only.
   `fingerprint-9loops.svg`, `credit-card-branded.svg`,
   `duotone-color-only.svg`) are MIT-licensed under this repo's
   [`LICENSE`](../../LICENSE).
+- The v0.6 `custom-v06/` SVG and JSON anchors are original repo-authored
+  calibration assets, MIT-licensed under this repo's [`LICENSE`](../../LICENSE),
+  and are not fetched from upstream icon libraries.
 - Notes files (`*.notes.md`), `manifest.json`, `README.md`, `ATTRIBUTIONS.md`,
   and `tier-c/README.md` are MIT-licensed under this repo.
 
 ## Honest limitations
 
-The v0.4 corpus closed many gaps that v0.3 carried, but it is still
-deliberately scoped. v0.5 should still address:
+The v0.4 corpus closed many gaps that v0.3 carried, and v0.6 adds a small
+custom set for style/motion calibration, but the corpus is still deliberately
+scoped. Future expansion should still address:
 
 1. **Pause / Stop / Skip media controls** — only `play.svg` is calibrated
    today; the rest of the transport family is missing.
@@ -134,12 +155,13 @@ deliberately scoped. v0.5 should still address:
     `references/platform-icon-specs.md` for native deployment.
 14. **Native large-size exemplars** — 32pt or 40pt canvas references are
     absent (mini-16, micro-20, and standard-24 are the three sizes covered).
-15. **Animated state transitions** — would land in a `tier-d-motion/`
-    directory with `.md` notes, not yet created.
+15. **Broader animated state transitions** — v0.6 adds one motion/static
+    fallback anchor, but a fuller `tier-d-motion/` corpus for multiple
+    interaction patterns is still not created.
 
 The corpus reaches the **size-of-corpus diminishing-returns boundary at
 ~80 SVGs** (we sit at ~117 entries today, with most over the threshold being
-state-pair siblings and tier-B examples for craft contrast). v0.5 expansion
+state-pair siblings and tier-B examples for craft contrast). Future expansion
 should be additive in *kind* (filling named gaps), not in *count*.
 
 To extend the corpus, fork, add the SVG + `.notes.md`, re-run

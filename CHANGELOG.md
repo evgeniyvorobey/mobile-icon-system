@@ -5,6 +5,34 @@ All notable changes to this skill will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this skill adheres to [Semantic Versioning](https://semver.org/).
 
+## [0.6.0] — 2026-04-28
+
+Production-integration release. The skill now turns the v0.5 motion/style systems into a more complete shipping workflow: Lottie/dotLottie asset validation, rendered multi-style contact sheets, platform export scaffolding, a generated demo package, style-pack registry discovery, design-tool write-back planning, visual regression checks, and an additive custom corpus expansion.
+
+### Added
+
+- **Lottie/dotLottie asset validation** ([`references/lottie-asset-validation.md`](references/lottie-asset-validation.md), [`scripts/validate_lottie_assets.py`](scripts/validate_lottie_assets.py), [`scripts/smoke_test_lottie_assets.py`](scripts/smoke_test_lottie_assets.py)): validates exported Lottie JSON and dotLottie ZIP packages after the motion spec passes. The validator checks top-level animation fields, derived duration, dimensions, layers, unsupported high-risk features, manifest references, embedded animations, optional themes/state machines, and rejects image/font assets for mobile UI icon motion.
+- **Rendered multi-style contact sheets** ([`scripts/render_multi_style_contact_sheet.py`](scripts/render_multi_style_contact_sheet.py), [`scripts/smoke_test_multi_style_contact_sheet.py`](scripts/smoke_test_multi_style_contact_sheet.py)): turns A/B/C review folders into self-contained HTML comparison sheets using shared inventory order and embedded SVG data URIs.
+- **Android/iOS export automation** ([`references/platform-export-automation.md`](references/platform-export-automation.md), [`scripts/export_platform_assets.py`](scripts/export_platform_assets.py), [`scripts/smoke_test_platform_exports.py`](scripts/smoke_test_platform_exports.py)): exports conservative path-only SVG masters to Android VectorDrawable XML and scaffolds iOS PDF-backed `.xcassets` image sets without pretending to convert SVG to PDF.
+- **Generated demo package** ([`references/demo-package.md`](references/demo-package.md), [`assets/demo-package/`](assets/demo-package/), [`scripts/smoke_test_demo_package.py`](scripts/smoke_test_demo_package.py)): compact fictional Tidepool Tasks package with Brand DNA, rules, vocabulary, rationale, scorecard, and five SVG masters.
+- **Style-pack registry** ([`references/style-packs/registry.md`](references/style-packs/registry.md), [`assets/style-pack-registry/`](assets/style-pack-registry/), [`scripts/build_style_pack_registry.py`](scripts/build_style_pack_registry.py), [`scripts/smoke_test_style_pack_registry.py`](scripts/smoke_test_style_pack_registry.py)): discovery index for shipped Markdown packs and validated `.style-pack` plugin manifests with duplicate-ID protection.
+- **Design-tool write-back planning** ([`references/design-tool-writeback.md`](references/design-tool-writeback.md), [`assets/design-tool-handoff-template/`](assets/design-tool-handoff-template/), [`scripts/scaffold_design_tool_handoff.py`](scripts/scaffold_design_tool_handoff.py), [`scripts/smoke_test_design_tool_handoff.py`](scripts/smoke_test_design_tool_handoff.py)): safe Figma/Pencil/Code Connect handoff scaffolding with explicit provenance so filesystem-only plans are never described as real MCP writes.
+- **Visual regression comparator** ([`references/visual-regression.md`](references/visual-regression.md), [`scripts/visual_regression_contact_sheet.py`](scripts/visual_regression_contact_sheet.py), [`scripts/smoke_test_visual_regression.py`](scripts/smoke_test_visual_regression.py)): compares approved PNG contact-sheet or platform-preview baselines against current snapshots with JSON reports.
+
+### Changed
+
+- **`SKILL.md` and `README.md`** now expose the v0.6 tools in the output contract, progressive-disclosure map, tooling list, package phase, validation phase, and repository structure.
+- **`references/motion-system.md`** now points to Lottie/dotLottie asset validation after motion-spec validation.
+- **`references/multi-style-review.md`** now includes generated HTML contact sheets as part of the A/B/C review path.
+- **`references/package-spec.md`** and **`references/production-resources.md`** now describe platform export automation, design-tool handoff scaffolding, and visual-regression evidence.
+- **CI and repo validation** now include the new references, templates, assets, and smoke tests.
+
+### Notes
+
+- The Lottie asset validator is an asset hygiene gate, not a renderer. Passing it means the package is structurally safe enough for handoff; renderer preview and reduced-motion QA are still required.
+- The platform exporter is intentionally conservative. It fails on unsupported SVG features instead of silently dropping visual meaning.
+- The style-pack registry is discovery-only and does not bypass the Phase 5 Brand DNA/accessibility/user-confirmation gate.
+
 ## [0.5.0] — 2026-04-28
 
 Motion and style-system release. The skill now (a) adds Animated/Lottie support as a separate motion subsystem with motion specs, easing guidance, Lottie/dotLottie deliverables, static frames, and reduced-motion validation; (b) adds user-defined `.style-pack` plugin manifests plus a validator; (c) supports generating one icon set in three styles for client A/B/C review; (d) ships three previously deferred styles — 3D/isometric, pixel-art, and hand-drawn; and (e) adds deterministic tooling for bitmap-aware pixel-art checks and seeded hand-drawn path jitter.

@@ -1,7 +1,7 @@
 ---
 name: mobile-icon-system
-version: 0.5.0
-description: Use when designing, refreshing, auditing, motion-enabling, or client-reviewing a brand-coherent UI icon set for a mobile app — covers the full app icon system (Tab Bar / Bottom Nav, action, system, media, status, communication, commerce, content, social, editing, time, location, security) plus 10 vertical-domain catalogs (music, finance, health, productivity, e-commerce, social, dev-tools, transportation, education, gaming), 6 shipped visual-style packs (Liquid Glass, chromatic duotone, claymorphism, 3D/isometric, pixel-art, hand-drawn), user `.style-pack` plugins, 3-style parallel A/B/C review, and an Animated/Lottie motion subsystem. Best for icon-set work that must inherit visual DNA from an existing logo or design system, stay consistent across the whole set, meet WCAG 2.2 accessibility, render at tier-A craft level (calibrated against a 44-metaphor / 118-SVG hand-curated reference corpus, generate-N-pick-1 variant search, mandatory second-eye critique loop, grader-driven regeneration loop, semantic-failure detection, bitmap-aware pixel-art checks), and ship as platform-ready iOS/Android assets — with optional Figma / Pencil MCP integration where available.
+version: 0.6.0
+description: Use when designing, refreshing, auditing, motion-enabling, exporting, or client-reviewing a brand-coherent UI icon set for a mobile app — covers the full app icon system (Tab Bar / Bottom Nav, action, system, media, status, communication, commerce, content, social, editing, time, location, security) plus 10 vertical-domain catalogs (music, finance, health, productivity, e-commerce, social, dev-tools, transportation, education, gaming), 6 shipped visual-style packs (Liquid Glass, chromatic duotone, claymorphism, 3D/isometric, pixel-art, hand-drawn), user `.style-pack` plugins with registry discovery, 3-style parallel A/B/C review with rendered contact sheets, and an Animated/Lottie motion subsystem with asset validation. Best for icon-set work that must inherit visual DNA from an existing logo or design system, stay consistent across the whole set, meet WCAG 2.2 accessibility, render at tier-A craft level (calibrated against a 44-metaphor / 118-SVG hand-curated reference corpus plus custom style/motion anchors, generate-N-pick-1 variant search, mandatory second-eye critique loop, grader-driven regeneration loop, semantic-failure detection, bitmap-aware pixel-art checks), and ship as platform-ready iOS/Android assets with optional Figma / Pencil write-back planning where available.
 ---
 
 # Mobile Icon System
@@ -18,7 +18,7 @@ Do not use for: full-coverage utility icon libraries with hundreds of glyphs ([S
 
 Every response must include: `Mode:`, `Platform scope:`, `Brand DNA source:`, `Design tool:` (Figma MCP / Pencil MCP / filesystem-only), `Set scope:` (which icon categories are in this run), `Visual style:`, `Motion scope:` (none / motion-spec / Lottie / dotLottie), `Accessibility tier:` (WCAG AA / AAA), `Assumptions:`, `Known facts:` vs `Recommendations:`, `Next actions:`.
 
-When the task is icon production, create or update SVG artifacts. When the task includes animated icons, create a motion spec first and validate it with `python3 scripts/validate_motion_spec.py <motion-spec.json>` before producing Lottie/dotLottie handoff artifacts. When a handoff package is needed, read [references/production-resources.md](references/production-resources.md) and scaffold with `python3 scripts/init_icon_system_package.py`.
+When the task is icon production, create or update SVG artifacts. When the task includes animated icons, create a motion spec first and validate it with `python3 scripts/validate_motion_spec.py <motion-spec.json>` before producing Lottie/dotLottie handoff artifacts; validate exported Lottie/dotLottie files with `python3 scripts/validate_lottie_assets.py <exports>`. When a handoff package is needed, read [references/production-resources.md](references/production-resources.md) and scaffold with `python3 scripts/init_icon_system_package.py`.
 
 ## Workflow
 
@@ -122,6 +122,12 @@ When the user asks for client review, A/B testing, or "one set in 3 styles", rea
 python3 scripts/init_multi_style_review.py <review_dir> --project-name "<Project>" --styles style-a,style-b,style-c
 ```
 
+After candidate SVGs exist, render a reviewer-friendly HTML comparison:
+
+```
+python3 scripts/render_multi_style_contact_sheet.py <review_dir> --output <review_dir>/review/contact-sheet.html
+```
+
 Do not blend styles after review. The client chooses one winner; lock that style in Phase 5 and continue production for the chosen style only. Runner-up styles remain review artifacts, not production assets.
 
 ### 8. Audit — consistency + second-eye critique
@@ -171,7 +177,8 @@ Read [references/tab-bar-validation.md](references/tab-bar-validation.md) and [r
 - Run the [references/accessibility.md](references/accessibility.md) checklist: 3:1 non-text contrast in every theme, 44pt iOS / 48dp Android touch target verification, deuteranopia simulation, single-color collapse fallback (Forced Colors / Increase Contrast), Dynamic Type / Font Scale pass for inline icons, reduced-motion static fallback for any animated icon, screen-reader labels per locale
 - If pixel-art is selected, run `python3 scripts/smoke_test_grade_bitmap.py` during repo validation and use `scripts/grade/bitmap.py` on candidate SVGs to verify crisp native-pixel behavior.
 - If hand-drawn is selected, any jitter must be deterministic via `python3 scripts/apply_path_jitter.py --seed <seed>` and the seed must be documented in the package.
-- If motion is in scope, validate every motion spec with `python3 scripts/validate_motion_spec.py <motion-spec.json>` and verify the reduced-motion path is not color-only, not animation-only, and has a static frame.
+- If motion is in scope, validate every motion spec with `python3 scripts/validate_motion_spec.py <motion-spec.json>`, validate exported Lottie/dotLottie assets with `python3 scripts/validate_lottie_assets.py <exports>`, and verify the reduced-motion path is not color-only, not animation-only, and has a static frame.
+- If approved PNG baselines exist, run `python3 scripts/visual_regression_contact_sheet.py <baseline_dir> <current_dir> --report-json <report.json>` after rendering contact-sheet or platform snapshots.
 
 ### 12. Improve or question
 
@@ -181,25 +188,28 @@ Identify weakest icon, weakest dimension, 2-3 concrete improvement moves. Ask on
 
 Read [references/package-spec.md](references/package-spec.md). When a design-tool MCP is connected, also read [references/design-tool-integrations.md](references/design-tool-integrations.md). Output:
 - SVG masters per icon (filled + outlined where applicable)
-- Platform exports (iOS template images / PDF, Android vector drawables)
+- Platform exports (iOS template images / PDF, Android vector drawables), optionally scaffolded with `python3 scripts/export_platform_assets.py <exports/svg-masters>`
 - Usage guidance per surface (Tab Bar tint, Bottom Nav active/inactive, action button states, status surfaces)
 - Naming convention (e.g., `ic_tab_home_filled.svg`)
 - Accessibility notes — labels per locale, traits, contrast measurements per theme, reduced-motion fallbacks (see [references/accessibility.md](references/accessibility.md))
-- Motion specs and Lottie/dotLottie notes when motion is in scope (see [references/motion-system.md](references/motion-system.md))
+- Motion specs, Lottie/dotLottie asset-validation logs, and renderer assumptions when motion is in scope (see [references/motion-system.md](references/motion-system.md) and [references/lottie-asset-validation.md](references/lottie-asset-validation.md))
 - Style plugin manifests or multi-style decision logs when used (see [references/style-packs/plugin-system.md](references/style-packs/plugin-system.md), [references/multi-style-review.md](references/multi-style-review.md))
-- Design-tool handoff (Figma Code Connect mappings, Pencil exports) when MCP available
+- Design-tool handoff or write-back plan (Figma MCP / Code Connect mappings / Pencil MCP / filesystem fallback) when needed
 - Export checklist
 - Unresolved risks
 
 ## Tooling
 
 - **SVG masters**: source of truth for every icon
-- **Figma MCP**: preferred when a Figma file or design system is connected — read variables, components, screenshots; push back via Code Connect. See [references/design-tool-integrations.md](references/design-tool-integrations.md).
+- **Figma MCP**: preferred when a Figma file or design system is connected — read variables, components, screenshots; push back via MCP or Code Connect only when the tool call actually happens. See [references/design-tool-integrations.md](references/design-tool-integrations.md) and [references/design-tool-writeback.md](references/design-tool-writeback.md).
 - **Pencil MCP**: required for any `.pen` file — `.pen` files are encrypted and cannot be opened with `Read`/`Grep`. Use `pencil.batch_get` to read and `pencil.batch_design` to write.
 - **Other design-tool MCPs**: any server providing design-context tools — same contract pattern (read before write, transactions where supported, screenshot for visual confirmation)
 - **Image generation**: mood/exploration only, never final masters
-- **Motion validation**: validate motion spec JSON with `scripts/validate_motion_spec.py`; Lottie/dotLottie are delivery formats, not style packs.
-- **Style plugin validation**: validate `.style-pack` manifests with `scripts/validate_style_pack.py`; custom styles must pass Brand DNA and accessibility gates before Phase 7.
+- **Motion validation**: validate motion spec JSON with `scripts/validate_motion_spec.py`; validate exported Lottie/dotLottie files with `scripts/validate_lottie_assets.py`. Lottie/dotLottie are delivery formats, not style packs.
+- **Style plugin validation**: validate `.style-pack` manifests with `scripts/validate_style_pack.py`; build discovery indexes with `scripts/build_style_pack_registry.py`. Custom styles must pass Brand DNA and accessibility gates before Phase 7.
+- **Multi-style contact sheets**: render A/B/C HTML comparison sheets with `scripts/render_multi_style_contact_sheet.py`.
+- **Platform export automation**: export path-only SVG masters to Android VectorDrawable XML and scaffold iOS PDF-backed `.xcassets` with `scripts/export_platform_assets.py`.
+- **Visual regression**: compare approved PNG baselines with `scripts/visual_regression_contact_sheet.py` when project snapshots exist.
 - **Pixel-art checks**: use `scripts/grade/bitmap.py` for bitmap-aware crispness and palette checks when pixel-art is selected.
 - **Hand-drawn jitter**: use `scripts/apply_path_jitter.py` only with a documented deterministic seed and bounded amplitude.
 - **Web research**: when platform guidance may have changed (HIG Tab Bar specs, Material 3 navigation, WCAG 2.2 amendments)
@@ -217,6 +227,7 @@ Load only when needed:
 - [references/project-audit.md](references/project-audit.md) — UI audit
 - [references/brand-dna-input.md](references/brand-dna-input.md) — Brand DNA ingestion
 - [references/design-tool-integrations.md](references/design-tool-integrations.md) — Figma / Pencil / generic MCP integration
+- [references/design-tool-writeback.md](references/design-tool-writeback.md) — Figma/Pencil write-back provenance, Code Connect mapping, filesystem-only handoff scaffold
 - [references/icon-grid-construction.md](references/icon-grid-construction.md) — grid + stroke rules
 - [references/icon-vocabulary.md](references/icon-vocabulary.md) — full-set metaphor library (13 categories) with calibration-corpus references per metaphor
 - [references/domain-metaphors/](references/domain-metaphors/) — 10 domain catalogs (music, finance, health, productivity, e-commerce, social, dev-tools, transportation, education, gaming) + cross-domain patterns + README; loaded only when user states a matching app domain in Phase 4
@@ -226,9 +237,13 @@ Load only when needed:
 - [references/aesthetic-principles.md](references/aesthetic-principles.md) — 10 principles (Vignelli, Rams, Müller-Brockmann; loaded by phase 5 + 9)
 - [references/accessibility.md](references/accessibility.md) — WCAG 2.2, touch targets, screen-reader labeling, color-blind safety
 - [references/motion-system.md](references/motion-system.md) — Animated/Lottie subsystem, motion spec schema, easing, reduced-motion validation; loaded only when motion is in scope
-- [references/style-packs/](references/style-packs/) — Liquid Glass, chromatic duotone, claymorphism, 3D/isometric, pixel-art, hand-drawn construction rules plus deferred-style register; loaded only when user picks one of these styles in Phase 5
+- [references/lottie-asset-validation.md](references/lottie-asset-validation.md) — Lottie JSON and dotLottie asset hygiene; loaded only when Lottie/dotLottie files are produced or audited
+- [references/style-packs/](references/style-packs/) — Liquid Glass, chromatic duotone, claymorphism, 3D/isometric, pixel-art, hand-drawn construction rules plus deferred-style register and registry; loaded only when user picks one of these styles in Phase 5
 - [references/style-packs/plugin-system.md](references/style-packs/plugin-system.md) — custom `.style-pack` manifest format and validation; loaded only when the user supplies or asks for a custom style plugin
-- [references/multi-style-review.md](references/multi-style-review.md) — A/B/C client review workflow for one set generated in three styles; loaded only for multi-style review requests
+- [references/multi-style-review.md](references/multi-style-review.md) — A/B/C client review workflow for one set generated in three styles, including generated contact sheets; loaded only for multi-style review requests
+- [references/platform-export-automation.md](references/platform-export-automation.md) — Android VectorDrawable and iOS PDF-backed `.xcassets` export automation
+- [references/demo-package.md](references/demo-package.md) — compact generated demo package and smoke-test expectations
+- [references/visual-regression.md](references/visual-regression.md) — PNG baseline comparison for rendered review snapshots
 - [assets/references/](assets/references/) — calibration corpus (tier-A / tier-B / tier-C SVGs with `.notes.md` craft observations; loaded by phase 7 variant pick and phase 9 craft pass)
 - [references/platform-icon-specs.md](references/platform-icon-specs.md) — iOS/Android specs
 - [references/icon-set-evaluation.md](references/icon-set-evaluation.md) — scoring

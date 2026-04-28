@@ -61,6 +61,10 @@ For every icon in the set, ship:
   - Naming: `home_filled.pdf`, `home_outlined.pdf`
   - Render As: Template Image (in xcassets)
 - Optional: xcassets folder ready to drop in
+- Scaffold from existing same-stem vector PDFs with:
+  ```bash
+  python3 scripts/export_platform_assets.py exports/svg-masters --platform ios
+  ```
 
 ### Android
 
@@ -68,6 +72,10 @@ For every icon in the set, ship:
   - Naming: `ic_tab_home_filled.xml`, `ic_tab_home_outlined.xml`
   - Tint: `android:tint="?attr/colorOnSurface"` or per project theme
 - Optional: full res folder structure
+- Export conservative path-only SVG masters with:
+  ```bash
+  python3 scripts/export_platform_assets.py exports/svg-masters --platform android
+  ```
 
 ### Cross-platform (React Native, Flutter, web)
 
@@ -103,9 +111,11 @@ Required files:
 - `motion/static-frames/` — one static fallback frame per animated icon
 - `motion/lottie/` — Lottie JSON files when Lottie is a delivery target
 - `motion/dotlottie/` — dotLottie bundles when multiple animations, themes, or state machines are needed
+- `motion/validation/` — motion-spec and Lottie/dotLottie asset-validation logs
 - `selected/usage-guidance.md` — implementation notes explaining triggers, replay rules, reduced-motion behavior, and renderer assumptions
 
 Motion specs must include a reduced-motion substitute. If the default animation conveys meaning, the substitute must preserve the meaning with a non-motion pattern such as a static state, highlight fade, dissolve, haptic note, or copy/state update.
+Validate exported assets with `python3 scripts/validate_lottie_assets.py motion/lottie motion/dotlottie` before handoff.
 
 ## Multi-Style Review Deliverables
 
@@ -118,6 +128,12 @@ python3 scripts/init_multi_style_review.py /path/to/review \
 ```
 
 The review package is not the production package. After the client chooses one style, copy only the winning style into `exports/svg-masters/` and document the decision in `selected/rationale.md`.
+After candidate SVGs exist, render a self-contained HTML contact sheet:
+
+```bash
+python3 scripts/render_multi_style_contact_sheet.py /path/to/review \
+  --output /path/to/review/review/contact-sheet.html
+```
 
 ## Style Plugin Deliverables
 
@@ -128,6 +144,45 @@ python3 scripts/validate_style_pack.py style-plugins/
 ```
 
 The package must preserve the validated manifest so future designers can reproduce the construction rules.
+For discoverability across built-ins and plugins, build a registry:
+
+```bash
+python3 scripts/build_style_pack_registry.py style-plugins/ --output style-plugins/registry.json
+```
+
+The registry is not a runtime loader; Phase 5 confirmation still gates every style.
+
+## Design-Tool Handoff
+
+When Figma or Pencil write-back is planned, include a handoff folder generated with:
+
+```bash
+python3 scripts/scaffold_design_tool_handoff.py design-tool-handoff \
+  --project-name "{{Project Name}}" \
+  --handoff-mode mixed
+```
+
+The scaffold records planned targets, actual MCP execution logs, Code Connect mappings, and verification evidence. It must not claim Figma or Pencil content was changed unless a real MCP write call happened.
+
+## Visual Regression Evidence
+
+When approved PNG baselines exist, include:
+
+```text
+reviews/visual-regression/
+├── baseline/
+├── current/
+└── report.json
+```
+
+Generate the report with:
+
+```bash
+python3 scripts/visual_regression_contact_sheet.py \
+  reviews/visual-regression/baseline \
+  reviews/visual-regression/current \
+  --report-json reviews/visual-regression/report.json
+```
 
 ## System Rules Document
 

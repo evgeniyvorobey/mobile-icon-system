@@ -188,6 +188,17 @@ python3 scripts/init_multi_style_review.py /path/to/review \
   --styles liquid-glass,3d-isometric,hand-drawn
 ```
 
+After the three candidate icon folders contain matching SVG stems, render a
+self-contained HTML comparison sheet:
+
+```bash
+python3 scripts/render_multi_style_contact_sheet.py /path/to/review \
+  --output /path/to/review/review/contact-sheet.html
+```
+
+Use the generated sheet for quick visual review, but keep `scorecard.md`,
+`decision-log.md`, and `winner-lock.md` as the decision record.
+
 After review, the client/user chooses one winner. Lock that style back into Phase 5 rules and continue Phase 7 production only for the winner. Do not silently blend candidates; if the user wants a hybrid, document the dominant style plus each borrowed rule explicitly and re-run the Phase 5 gate.
 
 ## Phase 8 — Audit (consistency + second-eye critique)
@@ -295,8 +306,13 @@ Read [`tab-bar-validation.md`](tab-bar-validation.md) and [`accessibility.md`](a
 - Motion validation when animated icons are in scope:
   - Read [`motion-system.md`](motion-system.md)
   - Validate every motion spec with `python3 scripts/validate_motion_spec.py <motion-spec.json>`
+  - Validate exported Lottie/dotLottie assets with `python3 scripts/validate_lottie_assets.py <exports/lottie> <exports/dotlottie>`
   - Confirm static frame, reduced-motion substitute, and no animation-only meaning
-  - For Lottie/dotLottie handoff, document renderer assumptions and unsupported feature risks
+- For Lottie/dotLottie handoff, document renderer assumptions, asset-validation logs, and unsupported feature risks
+- Visual regression when approved PNG baselines exist:
+  - Render current contact-sheet or platform-preview PNGs with the same viewport and theme as the baseline
+  - Compare with `python3 scripts/visual_regression_contact_sheet.py <baseline_dir> <current_dir> --report-json <report.json>`
+  - Human-review any failure before updating baselines
 
 Render mockups and verify each context.
 
@@ -319,11 +335,17 @@ Read [`package-spec.md`](package-spec.md) and [`design-tool-integrations.md`](de
 - Accessibility notes (labels per locale, traits, contrast measurements, reduced-motion fallbacks) — see [`accessibility.md`](accessibility.md)
 - Motion specs, static frames, Lottie/dotLottie export notes, and validation logs when motion is in scope — see [`motion-system.md`](motion-system.md)
 - Custom `.style-pack` manifests or multi-style decision logs when used — see [`style-packs/plugin-system.md`](style-packs/plugin-system.md) and [`multi-style-review.md`](multi-style-review.md)
-- Design-tool handoff (Figma Code Connect mappings, Pencil exports) when an MCP is connected
+- Design-tool handoff or write-back plan (Figma MCP, Code Connect mappings, Pencil MCP, or filesystem-only fallback) when needed — see [`design-tool-writeback.md`](design-tool-writeback.md)
+- Visual-regression evidence when approved baselines exist — see [`visual-regression.md`](visual-regression.md)
 - Export checklist
 - Unresolved risks
 
 Scaffold via `scripts/init_icon_system_package.py` if a real handoff folder is needed.
+Use `scripts/export_platform_assets.py` for conservative Android VectorDrawable
+and iOS `.xcassets` scaffolding from path-only SVG masters. Use
+`scripts/scaffold_design_tool_handoff.py` when design-tool write-back must be
+planned or handed to another operator without claiming that MCP writes already
+happened.
 
 ## Stopping Conditions
 

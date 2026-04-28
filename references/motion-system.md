@@ -177,12 +177,24 @@ python3 scripts/validate_motion_spec.py path/to/motion-spec.json
 
 The validator checks required fields, duration sanity, easing format, allowed properties, Lottie and dotLottie deliverables, static frame, reduced-motion fallback, and banned reduced-motion triggers.
 
+After Lottie JSON or dotLottie files are exported, validate the actual assets:
+
+```bash
+python3 scripts/validate_lottie_assets.py exports/lottie exports/dotlottie
+```
+
+The asset validator checks the exported JSON/ZIP structure, derived duration,
+dimensions, manifest references, and rejects risky mobile-icon features such as
+expressions, image layers, text/font payloads, After Effects effects, and 3D
+rendering. It is not a renderer; target-renderer preview is still required.
+
 ## Evidence Checklist
 
 Before shipping, record validation evidence:
 
 - [ ] Lottie JSON opens in the target renderer.
 - [ ] dotLottie package opens in the target renderer.
+- [ ] `python3 scripts/validate_lottie_assets.py ...` passes on exported assets.
 - [ ] Static frame reads as the same icon state at 16/20/24 pt.
 - [ ] Reduced-motion setting was tested on every platform in scope.
 - [ ] Screen-reader label and state remain correct during and after motion.

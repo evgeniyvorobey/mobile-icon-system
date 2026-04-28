@@ -37,9 +37,16 @@ Only style rules may vary: stroke language, fill model, terminal style, corner l
 2. Fill the shared files in `shared/`. These are the source of truth for all three candidates.
 3. Assign one worker or generation pass to each style folder: `style-a/`, `style-b/`, `style-c/`.
 4. Generate every icon in every style folder with identical filename stems and contact-sheet order.
-5. Review using `review/scorecard.md` and `review/contact-sheet.md`.
-6. Record the client decision in `review/decision-log.md`.
-7. Lock exactly one winner in `review/winner-lock.md`.
+5. Render the HTML comparison sheet:
+
+   ```bash
+   python3 scripts/render_multi_style_contact_sheet.py ./multi-style-review \
+     --output ./multi-style-review/review/contact-sheet.html
+   ```
+
+6. Review using `review/scorecard.md`, `review/contact-sheet.md`, and the generated `review/contact-sheet.html`.
+7. Record the client decision in `review/decision-log.md`.
+8. Lock exactly one winner in `review/winner-lock.md`.
 
 ## Package Shape
 
@@ -67,10 +74,16 @@ multi-style-review/
     exports/
   review/
     contact-sheet.md
+    contact-sheet.html
     decision-log.md
     scorecard.md
     winner-lock.md
 ```
+
+`contact-sheet.html` is generated after SVG candidates exist. It is intentionally
+self-contained and embeds SVGs as data URIs so the reviewer can open one file
+without network access. Missing candidate SVGs are shown as missing cells rather
+than silently removed.
 
 ## Winner Lock
 
