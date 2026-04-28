@@ -1,0 +1,102 @@
+{
+  "id": "fixture.soft-plastic",
+  "name": "Soft Plastic Fixture",
+  "version": "0.1.0",
+  "status": "experimental",
+  "category": "tactile",
+  "compatibility": {
+    "schemaVersion": "1.0.0",
+    "mobileIconSystem": ">=0.5.0",
+    "platforms": ["ios", "android"],
+    "stylePackModel": "plugin"
+  },
+  "brandDnaConstraints": {
+    "inherits": [
+      "geometric alphabet",
+      "brand color tokens",
+      "optical correction rules"
+    ],
+    "overrides": [
+      "corner treatment",
+      "fill model"
+    ],
+    "refuseIf": [
+      "brand requires sharp 90 degree corners",
+      "brand forbids filled icon bodies"
+    ]
+  },
+  "constructionRules": {
+    "layerModel": [
+      {
+        "id": "body",
+        "role": "primary glyph fill"
+      },
+      {
+        "id": "shadow",
+        "role": "decorative depth only"
+      }
+    ],
+    "numericalThresholds": {
+      "cornerRadiusPercent": [24, 50],
+      "bodyContrastMinimum": 3
+    },
+    "svgFeatures": [
+      "path",
+      "filter"
+    ],
+    "forbiddenFeatures": [
+      "photographic texture",
+      "third hue"
+    ]
+  },
+  "accessibility": {
+    "contrast": "Primary body fill must meet 3:1 against the target surface.",
+    "forcedColors": "The metaphor must read when decorative shadows are removed.",
+    "stateChanges": "Never rely on shadow strength alone."
+  },
+  "validation": {
+    "checks": [
+      {
+        "id": "body-contrast",
+        "description": "Primary body fill passes 3:1 non-text contrast.",
+        "severity": "error"
+      },
+      {
+        "id": "shadow-decorative",
+        "description": "Decorative shadow does not carry semantic state.",
+        "severity": "warning"
+      }
+    ],
+    "failureModes": [
+      "body contrast below 3:1",
+      "shadow carries semantic state"
+    ]
+  },
+  "prompts": {
+    "selectionPrompt": "Use only after the user confirms a tactile filled style.",
+    "examples": [
+      {
+        "request": "Friendly wellness app with rounded pastel Brand DNA.",
+        "expectedDecision": "candidate"
+      },
+      {
+        "request": "Sharp monochrome enterprise system.",
+        "expectedDecision": "refuse"
+      }
+    ]
+  },
+  "artifactExpectations": {
+    "outputs": [
+      "style rules summary",
+      "SVG masters with stable layer IDs"
+    ],
+    "metadata": [
+      "stylePackId",
+      "stylePackVersion",
+      "status"
+    ],
+    "reviewNotes": [
+      "Brand DNA conflicts and explicit overrides"
+    ]
+  }
+}

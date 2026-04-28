@@ -44,6 +44,38 @@ Output: HTML file with:
 
 Used in workflow phase 11 (validate in context).
 
+### `init_multi_style_review.py`
+
+Scaffolds a three-style review package for client A/B/C comparison before production style lock.
+
+```bash
+python3 scripts/init_multi_style_review.py /path/to/review \
+  --project-name "Project Name" \
+  --styles liquid-glass,3d-isometric,hand-drawn
+```
+
+Creates shared Brand DNA / inventory / constraints files, `style-a` / `style-b` / `style-c` folders, scorecard, decision log, contact-sheet placeholder, and winner lock.
+
+### `validate_motion_spec.py`
+
+Validates animated-icon motion specs before Lottie/dotLottie handoff.
+
+```bash
+python3 scripts/validate_motion_spec.py /path/to/motion-spec.json
+```
+
+Checks required fields, duration, easing, allowed properties, static frame, reduced-motion fallback, and validation evidence.
+
+### `validate_style_pack.py`
+
+Validates user `.style-pack` manifests before custom styles enter Phase 5.
+
+```bash
+python3 scripts/validate_style_pack.py /path/to/styles/
+```
+
+Requires Brand DNA refusal criteria, construction rules, accessibility guidance, validation checks, prompt examples, and artifact expectations.
+
 ## Template Structure
 
 Templates live in `assets/package-template/`:
@@ -87,6 +119,8 @@ open ~/projects/myapp/icon-system/reviews/contact-sheet.html
 # 5. Fill in selected/rationale.md, system-rules.md, etc.
 ```
 
+For multi-style review, run `init_multi_style_review.py` before Phase 7 production. For motion, validate `motion-spec.json` before exporting Lottie/dotLottie assets. For custom styles, validate all `.style-pack` manifests before Phase 5 confirmation.
+
 ## Manual Steps
 
 The skill assists but does not fully automate:
@@ -94,6 +128,7 @@ The skill assists but does not fully automate:
 - Filling in `selected/rationale.md` (skill drafts; user reviews and edits)
 - Filling in `usage-guidance.md` per surface (skill drafts based on platform specs)
 - Producing platform-specific exports (PDF for iOS, vector drawable XML for Android)
+- Producing Lottie/dotLottie binaries from a validated motion spec
 - Final QA on real devices
 
 ## Brand DNA Source
@@ -112,3 +147,5 @@ See [`brand-dna-input.md`](brand-dna-input.md) for the canonical structure and t
 - **Editing scaffolded templates without reviewing first** — placeholders remain (`{{PROJECT_NAME}}` in production docs)
 - **Not running the contact sheet** — context validation skipped
 - **Manually exporting without checklist** — Render As: Template Image misconfigured silently
+- **Skipping motion spec validation** — animated icons ship without static reduced-motion fallback
+- **Applying unvalidated style plugins** — custom styles bypass Brand DNA and accessibility gates

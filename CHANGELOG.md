@@ -5,6 +5,33 @@ All notable changes to this skill will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this skill adheres to [Semantic Versioning](https://semver.org/).
 
+## [0.5.0] — 2026-04-28
+
+Motion and style-system release. The skill now (a) adds Animated/Lottie support as a separate motion subsystem with motion specs, easing guidance, Lottie/dotLottie deliverables, static frames, and reduced-motion validation; (b) adds user-defined `.style-pack` plugin manifests plus a validator; (c) supports generating one icon set in three styles for client A/B/C review; (d) ships three previously deferred styles — 3D/isometric, pixel-art, and hand-drawn; and (e) adds deterministic tooling for bitmap-aware pixel-art checks and seeded hand-drawn path jitter.
+
+### Added
+
+- **Animated/Lottie subsystem** ([`references/motion-system.md`](references/motion-system.md), [`scripts/validate_motion_spec.py`](scripts/validate_motion_spec.py), [`scripts/smoke_test_motion_spec.py`](scripts/smoke_test_motion_spec.py)): treats motion as interaction behavior rather than a visual style pack. Motion specs require trigger, semantic purpose, timeline, duration, easing, allowed properties, Lottie/dotLottie deliverables, static frame, reduced-motion fallback, and validation evidence.
+- **Style-pack plugin system** ([`references/style-packs/plugin-system.md`](references/style-packs/plugin-system.md), [`scripts/validate_style_pack.py`](scripts/validate_style_pack.py), [`scripts/smoke_test_style_pack_plugin.py`](scripts/smoke_test_style_pack_plugin.py), [`assets/style-pack-fixtures/`](assets/style-pack-fixtures/)): validates user `.style-pack` JSON manifests with required Brand DNA refusal criteria, construction rules, accessibility notes, validation checks, prompts, and artifact expectations.
+- **Multi-style parallel review** ([`references/multi-style-review.md`](references/multi-style-review.md), [`scripts/init_multi_style_review.py`](scripts/init_multi_style_review.py), [`scripts/smoke_test_multi_style_review.py`](scripts/smoke_test_multi_style_review.py), [`assets/multi-style-template/`](assets/multi-style-template/)): scaffolds A/B/C client review packages with shared Brand DNA, inventory, constraints, scorecard, decision log, and winner lock.
+- **Three shipped style packs** ([`references/style-packs/3d-isometric.md`](references/style-packs/3d-isometric.md), [`references/style-packs/pixel-art.md`](references/style-packs/pixel-art.md), [`references/style-packs/hand-drawn.md`](references/style-packs/hand-drawn.md), [`references/style-packs/deferred-styles.md`](references/style-packs/deferred-styles.md)): 3D/isometric uses deterministic axonometric SVG layers; pixel-art uses target-size bitmap matrices and bitmap-aware QA; hand-drawn uses deterministic path jitter with seed, amplitude bounds, protected anchors, and baseline controls.
+- **Pixel-art and hand-drawn tooling** ([`scripts/grade/bitmap.py`](scripts/grade/bitmap.py), [`scripts/smoke_test_grade_bitmap.py`](scripts/smoke_test_grade_bitmap.py), [`scripts/apply_path_jitter.py`](scripts/apply_path_jitter.py), [`scripts/smoke_test_path_jitter.py`](scripts/smoke_test_path_jitter.py)): bitmap-aware pixel checks and deterministic SVG path-coordinate jitter for the shipped v0.5 styles.
+
+### Changed
+
+- **`SKILL.md` output contract** now includes `Visual style:` and `Motion scope:`. Workflow mode classification includes multi-style client review, motion-system add-on, and style-pack plugin validation.
+- **`references/workflow.md`** adds Phase 7.5 for three-style client review, explicit motion capture in Phase 4, style-plugin validation in Phase 5, style-specific tooling in Phase 9, and motion validation in Phase 11.
+- **`references/style-packs/README.md`** registers 3D/isometric, pixel-art, hand-drawn, custom `.style-pack` plugins, and a v0.5 style register.
+- **`references/package-spec.md`** adds optional `motion/`, `style-review/`, and `style-plugins/` package sections.
+- **CI and repo validation** now include the new reference files and smoke tests.
+
+### Notes
+
+- Animated/Lottie is intentionally **not** a style pack. It is a separate subsystem because motion has different acceptance criteria: timeline, easing, playback trigger, renderer compatibility, static frame, and reduced-motion fallback.
+- Pixel-art is no longer "wrong primitive for SVG-first" when used with a bitmap-matrix source of truth and bitmap-aware validation. SVG rectangle output is an interchange format, not the conceptual master.
+- Hand-drawn remains deterministic only when seed, amplitude, protected anchors, and snap policy are documented. Runtime or per-export randomness remains a hard fail.
+- Backward compatibility: existing v0.4 static icon workflows remain valid. New motion, plugin, and multi-style review flows are opt-in.
+
 ## [0.4.0] — 2026-04-28
 
 Density release. The skill now (a) **closes the grader → regen loop** so grader findings automatically feed into a regeneration brief the LLM consumes; (b) **detects two semantic failure classes programmatically** (anti-example similarity via pHash; color-only state distinction) and promotes them from warn to hard_fail; (c) **expands the calibration corpus from 27 to 118 SVGs covering 44 metaphors** with 9 explicit state pairs, 6 native-small (16/20pt) exemplars, and 5 duotone exemplars; (d) **fills color-system.md with a 1500-word workflow reference + a 3500-word deep dive** spanning OKLCH, HCT, Material You, iOS Dynamic Color, CSS Color 4, and Display P3; (e) **adds 3 visual style packs** (Liquid Glass, chromatic duotone, claymorphism) with full construction rules, anti-patterns, brand-DNA mappings, and accessibility implications; (f) **adds 10 vertical-domain catalogs** (music, finance, health, productivity, e-commerce, social, dev-tools, transportation, education, gaming) plus a cross-domain shape-collision file disambiguating 10 patterns where the same icon means different things in different verticals.

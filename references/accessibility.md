@@ -100,7 +100,7 @@ Windows High Contrast and macOS Increase Contrast can replace icon colors with s
 
 ## Reduced motion
 
-Animated icons must check the user's reduced-motion preference and provide a static fallback.
+Animated icons must check the user's reduced-motion preference and provide a static fallback. For Lottie/dotLottie icon motion, define and validate the motion contract with [`motion-system.md`](motion-system.md) before exporting runtime assets.
 
 - iOS: `UIAccessibility.isReduceMotionEnabled`
 - Android: `Settings.Global.TRANSITION_ANIMATION_SCALE` and `Settings.Global.ANIMATOR_DURATION_SCALE`
@@ -119,6 +119,7 @@ For every icon set the skill ships, verify:
 - [ ] Status icons differ by shape, not only color
 - [ ] If any icon contains text, text contrast hits **4.5:1**
 - [ ] If any icon animates, a `prefers-reduced-motion` static fallback exists
+- [ ] If any icon ships as Lottie/dotLottie, `python3 scripts/validate_motion_spec.py <motion-spec.json>` passes
 - [ ] Icons survive a deuteranopia simulation pass
 - [ ] Icons survive Increase Contrast / Forced Colors fallback (single-color silhouette reads)
 - [ ] Inline icons paired with text scale with Dynamic Type / Font Scale

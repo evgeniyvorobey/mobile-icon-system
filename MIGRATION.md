@@ -2,6 +2,63 @@
 
 This document captures step-by-step upgrade instructions between major and minor versions of `mobile-icon-system`.
 
+## 0.4.0 → 0.5.0
+
+The v0.5 release adds optional subsystems for Animated/Lottie motion, user `.style-pack` plugins, three-style A/B/C client review, and three shipped style packs (3D/isometric, pixel-art, hand-drawn). Static icon workflows from v0.4 remain compatible.
+
+### What you should do
+
+1. **Re-install** to pick up the new references and scripts:
+   ```bash
+   python3 scripts/install_skill.py --codex --force
+   python3 scripts/install_skill.py --claude-project /path/to/your/project --force
+   ```
+2. **Run the expanded validation suite**:
+   ```bash
+   python3 scripts/validate_skill_repo.py
+   python3 scripts/smoke_test_motion_spec.py
+   python3 scripts/smoke_test_style_pack_plugin.py
+   python3 scripts/smoke_test_multi_style_review.py
+   ```
+3. **Validate motion specs** when shipping animated icons:
+   ```bash
+   python3 scripts/validate_motion_spec.py path/to/motion-spec.json
+   ```
+4. **Validate custom style plugins** before applying them:
+   ```bash
+   python3 scripts/validate_style_pack.py path/to/custom.style-pack
+   ```
+5. **Use A/B/C scaffolding** for client review:
+   ```bash
+   python3 scripts/init_multi_style_review.py ./multi-style-review \
+     --project-name "Project Name" \
+     --styles liquid-glass,3d-isometric,hand-drawn
+   ```
+
+### What changed in inputs
+
+- Phase 4 now captures motion requirements separately from visual style.
+- Phase 5 visual style options now include `3d-isometric`, `pixel-art`, `hand-drawn`, and custom `.style-pack` plugins.
+- A new Phase 7.5 supports one set generated in three styles for client review. The client must lock one winner before production generation continues.
+- Motion/Lottie work reads `references/motion-system.md` and requires a JSON motion spec before Lottie/dotLottie handoff.
+
+### What changed in outputs
+
+- New required output-contract field: `Motion scope:` (`none`, `motion-spec`, `Lottie`, or `dotLottie`).
+- Production packages may include optional `motion/`, `style-review/`, and `style-plugins/` sections.
+- Pixel-art packages must document bitmap-aware QA.
+- Hand-drawn packages must document deterministic jitter seed, amplitude, and protected-anchor policy.
+
+### Breaking changes
+
+None for existing static icon prompts. New flows are opt-in. If a prompt asks for animated icons, the skill now blocks production until a static frame and reduced-motion fallback are specified.
+
+### Known v0.5 limitations
+
+- `validate_motion_spec.py` validates the motion contract, not the rendered Lottie file. Renderer-specific compatibility still needs product QA.
+- `.style-pack` manifests are data-only; they do not execute custom generators.
+- Multi-style review scaffolding creates review structure and decision logs, but it does not render contact sheets automatically.
+
 ## 0.3.0 → 0.4.0
 
 The v0.4 release closes the grader→regen loop, adds semantic failure detection as hard_fail, expands the corpus from 27 to 118 SVGs / 14 to 44 metaphors, fills color-system.md, ships 3 visual style packs (Liquid Glass, chromatic duotone, claymorphism), and adds 10 vertical-domain metaphor catalogs. No file format in `assets/package-template/` changed; existing v0.3 packages remain valid.

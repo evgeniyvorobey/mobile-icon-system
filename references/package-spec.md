@@ -17,6 +17,16 @@ icon-system-package/
 │   ├── tab-bar-icon-notes.md       # iOS-specific notes
 │   ├── bottom-nav-notes.md         # Android-specific notes
 │   └── export-checklist.md         # what to export, in what format
+├── motion/                         # optional animated-icon subsystem
+│   ├── motion-spec.json            # validated motion contract
+│   ├── static-frames/              # reduced-motion and preview frames
+│   ├── lottie/                     # .json exports, one per animated icon
+│   └── dotlottie/                  # .lottie bundles when used
+├── style-review/                   # optional A/B/C review artifacts
+│   ├── shared-brief.md
+│   ├── decision-log.md
+│   └── style-{a,b,c}/
+├── style-plugins/                  # optional user .style-pack manifests
 ├── exports/
 │   ├── ios/
 │   │   ├── pdf/                    # template images for asset catalog
@@ -82,6 +92,42 @@ Example:
 - `ic_status_success.svg`
 
 Document the convention in `system-rules.md`.
+
+## Motion Deliverables
+
+Motion is packaged only when animated icons are in scope. It is not a visual style pack.
+
+Required files:
+
+- `motion/motion-spec.json` — validated with `python3 scripts/validate_motion_spec.py motion/motion-spec.json`
+- `motion/static-frames/` — one static fallback frame per animated icon
+- `motion/lottie/` — Lottie JSON files when Lottie is a delivery target
+- `motion/dotlottie/` — dotLottie bundles when multiple animations, themes, or state machines are needed
+- `selected/usage-guidance.md` — implementation notes explaining triggers, replay rules, reduced-motion behavior, and renderer assumptions
+
+Motion specs must include a reduced-motion substitute. If the default animation conveys meaning, the substitute must preserve the meaning with a non-motion pattern such as a static state, highlight fade, dissolve, haptic note, or copy/state update.
+
+## Multi-Style Review Deliverables
+
+When the user requests A/B/C client review, scaffold a review package with:
+
+```bash
+python3 scripts/init_multi_style_review.py /path/to/review \
+  --project-name "Project Name" \
+  --styles liquid-glass,3d-isometric,hand-drawn
+```
+
+The review package is not the production package. After the client chooses one style, copy only the winning style into `exports/svg-masters/` and document the decision in `selected/rationale.md`.
+
+## Style Plugin Deliverables
+
+User-supplied `.style-pack` manifests live in `style-plugins/`. Validate them before use:
+
+```bash
+python3 scripts/validate_style_pack.py style-plugins/
+```
+
+The package must preserve the validated manifest so future designers can reproduce the construction rules.
 
 ## System Rules Document
 
@@ -184,6 +230,9 @@ Skill version: mobile-icon-system v{{version}}
 - [ ] usage-guidance.md committed to docs
 - [ ] Naming convention applied consistently
 - [ ] No baked color in any asset
+- [ ] Motion specs validated and static fallback frames included when animated icons ship
+- [ ] Custom `.style-pack` manifests validated when custom styles are used
+- [ ] Multi-style review decision logged before production exports are finalized
 ```
 
 ## Rationale
@@ -223,3 +272,6 @@ If any risks remain after evaluation and validation, list them in `rationale.md`
 - **No state pair in Tab Bar / Bottom Nav exports** — incomplete platform fit
 - **No usage-guidance** — icons used in wrong contexts (Tab Bar icon used inline)
 - **No risk documentation** — known issues become surprise bugs in production
+- **Motion package without static frames** — reduced-motion users lose the state cue
+- **Unvalidated `.style-pack` manifest** — future generation cannot reproduce the style safely
+- **A/B/C review package treated as production** — unchosen style drafts leak into app builds

@@ -32,6 +32,14 @@ jobs:
         run: python3 scripts/smoke_test_contact_sheet_browser.py
       - name: Run package scaffold smoke test
         run: python3 scripts/smoke_test_package_scaffold.py
+      - name: Run motion spec smoke test
+        run: python3 scripts/smoke_test_motion_spec.py
+      - name: Run style-pack plugin smoke test
+        run: python3 scripts/smoke_test_style_pack_plugin.py
+      - name: Run multi-style review smoke test
+        run: python3 scripts/smoke_test_multi_style_review.py
+      - name: Run path jitter smoke test
+        run: python3 scripts/smoke_test_path_jitter.py
 
   grade:
     runs-on: ubuntu-latest
@@ -71,6 +79,8 @@ jobs:
         run: python3 scripts/smoke_test_grade_anti_example.py
       - name: Smoke test grade.color_only_state
         run: python3 scripts/smoke_test_grade_color_only_state.py
+      - name: Smoke test grade.bitmap
+        run: python3 scripts/smoke_test_grade_bitmap.py
       - name: Smoke test grade end-to-end pipeline
         run: python3 scripts/smoke_test_grade_end_to_end.py
       - name: Smoke test grade_with_fixes (regeneration brief)

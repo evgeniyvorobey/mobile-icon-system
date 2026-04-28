@@ -1,6 +1,6 @@
 # Workflow
 
-Full workflow for the icon system skill, expanded from `SKILL.md`. 13 phases, two quality tiers (Standard / Hi-end). Use this as the canonical reference when running a complete icon-system project.
+Full workflow for the icon system skill, expanded from `SKILL.md`. 13 phases plus optional review / motion branches, two quality tiers (Standard / Hi-end). Use this as the canonical reference when running a complete icon-system project.
 
 ## Quality Tiers
 
@@ -21,6 +21,8 @@ Full workflow for the icon system skill, expanded from `SKILL.md`. 13 phases, tw
 - Full Tab Bar AND Bottom Nav validation including themed (Material You) state
 - Anchor reduction
 - Tangent continuity verification
+- Style-specific validation for shipped packs (3D/isometric, pixel-art, hand-drawn) when selected
+- Motion-spec validation for animated icons when motion is in scope
 
 ### Triggers for Hi-end
 
@@ -42,6 +44,7 @@ Full workflow for the icon system skill, expanded from `SKILL.md`. 13 phases, tw
 | 5. Define icon system rules (gate) | ✓ | ✓ | mandatory user-confirmation gate |
 | 6. Define vocabulary | ✓ | ✓ | |
 | 7. Generate the set (variants then pick) | ✓ (2 variants) | ✓ (3+ variants) | per-icon variant generation, justified pick |
+| 7.5. Multi-style parallel review | optional | optional | one set in 3 styles for client A/B/C; lock one winner before production |
 | 8. Audit (consistency + second-eye) | ✓ | ✓ | mandatory; loops back to phase 7 on regression |
 | 8.5. Grader-driven regeneration loop | optional | ✓ | mandatory hi-end; cap 2 iterations per icon |
 | 9. Craft pass | skip | ✓ | hi-end only; uses calibration corpus |
@@ -57,6 +60,9 @@ Determine which mode applies:
 - **Icon system creation** — new set from scratch
 - **Single icon addition** — adding one icon to an existing set (must inherit existing system rules)
 - **Icon set audit / refinement** — evaluate or improve an existing set
+- **Multi-style client review** — generate the same set in three visual styles for A/B/C review, then lock one winner
+- **Motion-system add-on** — create animated icon motion specs and Lottie/dotLottie handoff without changing static icon rules
+- **Style-pack plugin validation** — validate and apply a user-supplied `.style-pack` manifest
 - **Packaging** — handoff prep for an already-validated set
 - **Export-readiness audit** — check ship-readiness without redesign
 
@@ -99,6 +105,7 @@ Extract:
 - Full icon inventory required (Tab Bar, action, system, media, status, communication, commerce, content, social, editing, time, location, security — see [`icon-vocabulary.md`](icon-vocabulary.md) coverage map)
 - Platform priority (iOS / Android / cross-platform)
 - State requirements (selected/unselected for Tab Bar; pressed / disabled for action icons)
+- Motion requirements (none, triggered micro-interaction, loading, status transition, ongoing animation). If any are present, load [`motion-system.md`](motion-system.md) later; do not treat motion as a style pack.
 - System icon coexistence
 - Target locales and languages (informs cross-cultural metaphor choices)
 - Accessibility tier (WCAG AA default, AAA if user requests) — see [`accessibility.md`](accessibility.md)
@@ -113,12 +120,12 @@ Output:
 - Base grid (24/20/16) + live area
 - Stroke weight + diagonal compensation rule
 - Style (filled / outlined / both)
-- Visual style: monochrome / outlined / filled / duotone-mono / duotone-chromatic / liquid-glass / claymorphism (default = monochrome; if user chooses a style-pack option, load the corresponding reference at [`style-packs/`](style-packs/))
+- Visual style: monochrome / outlined / filled / duotone-mono / duotone-chromatic / liquid-glass / claymorphism / 3d-isometric / pixel-art / hand-drawn / custom `.style-pack` plugin (default = monochrome; if user chooses a style-pack option, load the corresponding reference at [`style-packs/`](style-packs/); if they supply a plugin, read [`style-packs/plugin-system.md`](style-packs/plugin-system.md) and validate with `python3 scripts/validate_style_pack.py <file-or-dir>`)
 - Selected/unselected state pairing logic (must distinguish via shape, not color alone — accessibility constraint)
 - Optical sizing protocol
 - Terminal style + corner radius logic
 - Color application rules
-- Accessibility budget: contrast target (3:1 minimum, 4.5:1 if any text inside icons), touch-target rule (44pt iOS / 48dp Android), reduced-motion fallback policy
+- Accessibility budget: contrast target (3:1 minimum, 4.5:1 if any text inside icons), touch-target rule (44pt iOS / 48dp Android), reduced-motion fallback policy; if motion is in scope, require a static frame, reduced-motion substitute, and validation plan from [`motion-system.md`](motion-system.md)
 
 **Stop. Ask user to confirm rules. Do not proceed to vocabulary or generation.**
 
@@ -160,6 +167,28 @@ After all variants are produced, read [`concept-quality.md`](concept-quality.md)
 Per-icon verification on the winners: meaning, silhouette, recognition at intended size, negative-space coherence, anchor economy.
 
 **Why this exists.** Generate-once-pick-once produces "first idea" icons. Designers iterate. Forcing N variants forces the search space to widen, and forcing a justified pick exposes the construction reasoning. This is the difference between "an icon" and "the icon".
+
+## Phase 7.5 — Multi-Style Parallel Review
+
+Run only when the user asks for A/B testing, client review, "show this in multiple styles", or explicitly requests one set in three styles.
+
+Read [`multi-style-review.md`](multi-style-review.md). The review must be apples-to-apples:
+
+- Same Brand DNA source and extracted rules
+- Same icon inventory and vocabulary table
+- Same grid, live area, state requirements, platform targets, and accessibility tier
+- Exactly three style candidates unless the user asks for fewer
+- Separate scorecards per style plus one decision log
+
+Scaffold the review package when a filesystem handoff is useful:
+
+```bash
+python3 scripts/init_multi_style_review.py /path/to/review \
+  --project-name "Project Name" \
+  --styles liquid-glass,3d-isometric,hand-drawn
+```
+
+After review, the client/user chooses one winner. Lock that style back into Phase 5 rules and continue Phase 7 production only for the winner. Do not silently blend candidates; if the user wants a hybrid, document the dominant style plus each borrowed rule explicitly and re-run the Phase 5 gate.
 
 ## Phase 8 — Audit (consistency + second-eye critique)
 
@@ -234,6 +263,10 @@ Per-icon:
 - Anchor reduction
 - Tangent continuity G1+
 - Pixel alignment at all target sizes
+- Style-specific tooling applied when relevant:
+  - Pixel-art: run bitmap-aware checks with `scripts/grade/bitmap.py`
+  - Hand-drawn: apply any jitter with `scripts/apply_path_jitter.py --seed ...` and document amplitude/snap
+  - 3D/isometric: verify projection, layer order, and small-size fallback
 
 Cross-icon:
 - Stroke optical balancing (visual weight, not numeric)
@@ -259,6 +292,11 @@ Read [`tab-bar-validation.md`](tab-bar-validation.md) and [`accessibility.md`](a
 - Competitor row (hi-end)
 - Small-size fallback if applicable
 - Accessibility validation (run the [`accessibility.md`](accessibility.md) checklist): 3:1 non-text contrast in every theme, 44pt iOS / 48dp Android touch-target verification, deuteranopia simulation pass, single-color collapse fallback, Dynamic Type pass for inline icons
+- Motion validation when animated icons are in scope:
+  - Read [`motion-system.md`](motion-system.md)
+  - Validate every motion spec with `python3 scripts/validate_motion_spec.py <motion-spec.json>`
+  - Confirm static frame, reduced-motion substitute, and no animation-only meaning
+  - For Lottie/dotLottie handoff, document renderer assumptions and unsupported feature risks
 
 Render mockups and verify each context.
 
@@ -279,6 +317,8 @@ Read [`package-spec.md`](package-spec.md) and [`design-tool-integrations.md`](de
 - Usage guidance per surface
 - Naming convention
 - Accessibility notes (labels per locale, traits, contrast measurements, reduced-motion fallbacks) — see [`accessibility.md`](accessibility.md)
+- Motion specs, static frames, Lottie/dotLottie export notes, and validation logs when motion is in scope — see [`motion-system.md`](motion-system.md)
+- Custom `.style-pack` manifests or multi-style decision logs when used — see [`style-packs/plugin-system.md`](style-packs/plugin-system.md) and [`multi-style-review.md`](multi-style-review.md)
 - Design-tool handoff (Figma Code Connect mappings, Pencil exports) when an MCP is connected
 - Export checklist
 - Unresolved risks
@@ -290,6 +330,7 @@ Scaffold via `scripts/init_icon_system_package.py` if a real handoff folder is n
 The workflow halts at:
 
 - Phase 5 gate — until user confirms rules
+- Phase 7.5 multi-style review — until user/client chooses one winning style
 - Phase 8 Pass B — loops back to Phase 7 on craft regression (not a halt, an iteration); cap at 2 loops per icon
 - Phase 12 — when 2+ unresolved questions block progress
 
@@ -302,5 +343,6 @@ The workflow has three intentional loops:
 1. **Variant search (within Phase 7)** — N variants per icon, then pick. The "loop" is internal to phase 7; it doesn't iterate over phases.
 2. **Craft regression (Phase 8 Pass B → Phase 7)** — when second-eye critique scores any icon below B on any axis, regenerate that icon only. Cap at 2 iterations per icon to bound cost.
 3. **Grader regeneration (Phase 8.5)** — when `scripts/grade_with_fixes.py` flags an icon with `warn` or `hard_fail`, read the per-icon fix prompt in `regen_brief.md` and regenerate that icon. Cap at 2 grader iterations per icon. Mandatory for hi-end; recommended for Standard.
+4. **Motion fallback regeneration (Phase 11 → motion spec)** — when a motion spec fails reduced-motion validation, revise the motion spec before touching the Lottie asset.
 
-All three loops are mandatory for hi-end tier; loops 1 and 2 are mandatory for Standard. Together they are the difference between "first idea" output and craft-level output.
+Loops 1-3 are mandatory for hi-end tier; loops 1 and 2 are mandatory for Standard. Loop 4 is mandatory whenever motion is in scope. Together they are the difference between "first idea" output and craft-level output.

@@ -1,24 +1,24 @@
 ---
 name: mobile-icon-system
-version: 0.4.0
-description: Use when designing, refreshing, or auditing a brand-coherent UI icon set for a mobile app — covers the full app icon system (Tab Bar / Bottom Nav, action, system, media, status, communication, commerce, content, social, editing, time, location, security) plus 10 vertical-domain catalogs (music, finance, health, productivity, e-commerce, social, dev-tools, transportation, education, gaming) plus 3 visual-style packs (Liquid Glass, chromatic duotone, claymorphism). Best for icon-set work that must inherit visual DNA from an existing logo or design system, stay consistent across the whole set, meet WCAG 2.2 accessibility, render at tier-A craft level (calibrated against a 44-metaphor / 118-SVG hand-curated reference corpus, generate-N-pick-1 variant search, mandatory second-eye critique loop, grader-driven regeneration loop, semantic-failure detection), and ship as platform-ready iOS/Android assets — with optional Figma / Pencil MCP integration where available.
+version: 0.5.0
+description: Use when designing, refreshing, auditing, motion-enabling, or client-reviewing a brand-coherent UI icon set for a mobile app — covers the full app icon system (Tab Bar / Bottom Nav, action, system, media, status, communication, commerce, content, social, editing, time, location, security) plus 10 vertical-domain catalogs (music, finance, health, productivity, e-commerce, social, dev-tools, transportation, education, gaming), 6 shipped visual-style packs (Liquid Glass, chromatic duotone, claymorphism, 3D/isometric, pixel-art, hand-drawn), user `.style-pack` plugins, 3-style parallel A/B/C review, and an Animated/Lottie motion subsystem. Best for icon-set work that must inherit visual DNA from an existing logo or design system, stay consistent across the whole set, meet WCAG 2.2 accessibility, render at tier-A craft level (calibrated against a 44-metaphor / 118-SVG hand-curated reference corpus, generate-N-pick-1 variant search, mandatory second-eye critique loop, grader-driven regeneration loop, semantic-failure detection, bitmap-aware pixel-art checks), and ship as platform-ready iOS/Android assets — with optional Figma / Pencil MCP integration where available.
 ---
 
 # Mobile Icon System
 
-A self-contained icon-set designer + production workflow. Generates the full brand icon set for a mobile app — Tab Bar, Bottom Nav, action, system, media, status, communication, commerce, content, social, editing, time, location, security — inheriting one Brand DNA across the whole set, validated for WCAG 2.2 accessibility, and shipped as platform-ready iOS/Android assets. Integrates with Figma and Pencil where MCP access is available; works from filesystem alone otherwise.
+A self-contained icon-set designer + production workflow. Generates the full brand icon set for a mobile app — Tab Bar, Bottom Nav, action, system, media, status, communication, commerce, content, social, editing, time, location, security — inheriting one Brand DNA across the whole set, validated for WCAG 2.2 accessibility, and shipped as platform-ready iOS/Android assets. It can also create motion specs and Lottie/dotLottie handoff plans for animated icons as a separate subsystem, and can generate one icon set in three visual styles for client A/B/C review before locking a winner. Integrates with Figma and Pencil where MCP access is available; works from filesystem alone otherwise.
 
 ## When To Use
 
-Use when the user wants: a complete brand icon set for an app, a refresh of an existing icon set, brand-coherent navigation / action / system icons that match an existing logo, single icon additions that must fit an existing system, accessibility-aware icon work (WCAG 2.2 AA / AAA), or evaluation of an existing set for consistency.
+Use when the user wants: a complete brand icon set for an app, a refresh of an existing icon set, brand-coherent navigation / action / system icons that match an existing logo, single icon additions that must fit an existing system, accessibility-aware icon work (WCAG 2.2 AA / AAA), animated/Lottie icon motion specs, multi-style client review, custom `.style-pack` plugin validation, or evaluation of an existing set for consistency.
 
-Do not use for: full-coverage utility icon libraries with hundreds of glyphs ([SF Symbols](https://developer.apple.com/sf-symbols/), [Material Symbols](https://fonts.google.com/icons), [Tabler](https://tabler.io/icons), [Lucide](https://lucide.dev) are better starting points), illustration, or single decorative graphics. App launcher / home screen marks need different construction rules than UI icons; use a dedicated logo workflow for that.
+Do not use for: full-coverage utility icon libraries with hundreds of glyphs ([SF Symbols](https://developer.apple.com/sf-symbols/), [Material Symbols](https://fonts.google.com/icons), [Tabler](https://tabler.io/icons), [Lucide](https://lucide.dev) are better starting points), illustration, single decorative graphics, or long-form character animation. App launcher / home screen marks need different construction rules than UI icons; use a dedicated logo workflow for that.
 
 ## Output Contract
 
-Every response must include: `Mode:`, `Platform scope:`, `Brand DNA source:`, `Design tool:` (Figma MCP / Pencil MCP / filesystem-only), `Set scope:` (which icon categories are in this run), `Accessibility tier:` (WCAG AA / AAA), `Assumptions:`, `Known facts:` vs `Recommendations:`, `Next actions:`.
+Every response must include: `Mode:`, `Platform scope:`, `Brand DNA source:`, `Design tool:` (Figma MCP / Pencil MCP / filesystem-only), `Set scope:` (which icon categories are in this run), `Visual style:`, `Motion scope:` (none / motion-spec / Lottie / dotLottie), `Accessibility tier:` (WCAG AA / AAA), `Assumptions:`, `Known facts:` vs `Recommendations:`, `Next actions:`.
 
-When the task is icon production, create or update SVG artifacts. When a handoff package is needed, read [references/production-resources.md](references/production-resources.md) and scaffold with `python3 scripts/init_icon_system_package.py`.
+When the task is icon production, create or update SVG artifacts. When the task includes animated icons, create a motion spec first and validate it with `python3 scripts/validate_motion_spec.py <motion-spec.json>` before producing Lottie/dotLottie handoff artifacts. When a handoff package is needed, read [references/production-resources.md](references/production-resources.md) and scaffold with `python3 scripts/init_icon_system_package.py`.
 
 ## Workflow
 
@@ -26,7 +26,7 @@ Full workflow details: [references/workflow.md](references/workflow.md)
 
 ### 1. Classify the request
 
-Choose one mode: icon-system creation, single icon addition, icon-set audit/refinement, packaging, export-readiness audit.
+Choose one mode: icon-system creation, single icon addition, icon-set audit/refinement, multi-style client review, motion-system add-on, style-pack plugin validation, packaging, export-readiness audit.
 
 #### Quality tier
 
@@ -61,7 +61,7 @@ Read [references/project-audit.md](references/project-audit.md) and, when a desi
 
 ### 4. Build context
 
-Extract: app category, **domain catalog selection** — match user's stated app category to one of [references/domain-metaphors/](references/domain-metaphors/) (music, finance, health, productivity, e-commerce, social, dev-tools, transportation, education, gaming); load matched domain file plus `_cross-domain.md` in Phase 6 alongside universal vocabulary; if no match, fall back to universal only. Then: navigation structure (which tabs / nav items exist), full icon inventory required across categories ([references/icon-vocabulary.md](references/icon-vocabulary.md) coverage map), platform priority (iOS / Android / cross-platform), state requirements (selected/unselected for Tab Bar; pressed / disabled for action icons), system icon coexistence (does the app also use SF Symbols / Material in places?), target locales, accessibility tier (WCAG AA default, AAA if user requests). Preserve user's existing direction unless they ask for a reset.
+Extract: app category, **domain catalog selection** — match user's stated app category to one of [references/domain-metaphors/](references/domain-metaphors/) (music, finance, health, productivity, e-commerce, social, dev-tools, transportation, education, gaming); load matched domain file plus `_cross-domain.md` in Phase 6 alongside universal vocabulary; if no match, fall back to universal only. Then: navigation structure (which tabs / nav items exist), full icon inventory required across categories ([references/icon-vocabulary.md](references/icon-vocabulary.md) coverage map), platform priority (iOS / Android / cross-platform), state requirements (selected/unselected for Tab Bar; pressed / disabled for action icons), motion requirements (none / trigger-based micro-interactions / loading / status transition / ongoing animation), system icon coexistence (does the app also use SF Symbols / Material in places?), target locales, accessibility tier (WCAG AA default, AAA if user requests). Preserve user's existing direction unless they ask for a reset.
 
 ### 5. Define icon system rules
 
@@ -73,12 +73,12 @@ Output:
 - Base grid (24×24 / 20×20 / 16×16) with live area + keyline padding
 - Stroke weight (e.g., 1.75pt) + exception rules
 - Style: filled / outlined / duotone (one primary, one optional secondary)
-- Visual style: monochrome / outlined / filled / duotone-mono / duotone-chromatic / liquid-glass / claymorphism (default = monochrome; if user chooses a style-pack option, load the corresponding reference at [references/style-packs/](references/style-packs/))
+- Visual style: monochrome / outlined / filled / duotone-mono / duotone-chromatic / liquid-glass / claymorphism / 3d-isometric / pixel-art / hand-drawn / custom `.style-pack` plugin (default = monochrome; if user chooses a style-pack option, load the corresponding reference at [references/style-packs/](references/style-packs/); if user supplies a plugin, validate it with `python3 scripts/validate_style_pack.py <file-or-dir>`)
 - Selected/unselected state pairing (Tab Bar) — must distinguish via shape, not color alone
 - Optical sizing balance protocol
 - Terminal style + corner radius logic
 - Color application rules (when icons are tinted vs duotone)
-- Accessibility budget: contrast target (3:1 minimum non-text, 4.5:1 if any text inside icons), touch-target rule (44pt iOS / 48dp Android), reduced-motion fallback policy
+- Accessibility budget: contrast target (3:1 minimum non-text, 4.5:1 if any text inside icons), touch-target rule (44pt iOS / 48dp Android), reduced-motion fallback policy; if motion is in scope, read [references/motion-system.md](references/motion-system.md) and require a static frame plus reduced-motion substitute before generation
 
 State strongest direction in one sentence. **Ask user to choose / confirm.** Do not proceed until they respond.
 
@@ -113,6 +113,16 @@ For each variant:
 After generating the 3 variants per icon, read [references/concept-quality.md](references/concept-quality.md), [references/craft-rubric.md](references/craft-rubric.md), [references/negative-space.md](references/negative-space.md), and [references/aesthetic-principles.md](references/aesthetic-principles.md). Apply the rubric to each variant. **Pick the winner per icon** with explicit per-axis reasoning ("variant 2 wins: 6 anchors vs 9, optical center 0.4pt above geometric, no trapped space below 4pt"). Present the winning set first; collapse the 2 runner-ups per icon into an appendix that the user can expand.
 
 This is not optional. Standard tier may use 2 variants instead of 3 to control token cost; hi-end always generates 3+.
+
+### 7.5. Multi-style parallel review (when requested)
+
+When the user asks for client review, A/B testing, or "one set in 3 styles", read [references/multi-style-review.md](references/multi-style-review.md). Generate the same vocabulary, grid, Brand DNA, metaphors, state requirements, and accessibility tier across exactly three style candidates. Scaffold review artifacts with:
+
+```
+python3 scripts/init_multi_style_review.py <review_dir> --project-name "<Project>" --styles style-a,style-b,style-c
+```
+
+Do not blend styles after review. The client chooses one winner; lock that style in Phase 5 and continue production for the chosen style only. Runner-up styles remain review artifacts, not production assets.
 
 ### 8. Audit — consistency + second-eye critique
 
@@ -159,6 +169,9 @@ Read [references/tab-bar-validation.md](references/tab-bar-validation.md) and [r
 - Real screen contexts adjacent to system icons (do they fight?)
 - 16pt size if any icon needs to appear at small contexts (notification, inline)
 - Run the [references/accessibility.md](references/accessibility.md) checklist: 3:1 non-text contrast in every theme, 44pt iOS / 48dp Android touch target verification, deuteranopia simulation, single-color collapse fallback (Forced Colors / Increase Contrast), Dynamic Type / Font Scale pass for inline icons, reduced-motion static fallback for any animated icon, screen-reader labels per locale
+- If pixel-art is selected, run `python3 scripts/smoke_test_grade_bitmap.py` during repo validation and use `scripts/grade/bitmap.py` on candidate SVGs to verify crisp native-pixel behavior.
+- If hand-drawn is selected, any jitter must be deterministic via `python3 scripts/apply_path_jitter.py --seed <seed>` and the seed must be documented in the package.
+- If motion is in scope, validate every motion spec with `python3 scripts/validate_motion_spec.py <motion-spec.json>` and verify the reduced-motion path is not color-only, not animation-only, and has a static frame.
 
 ### 12. Improve or question
 
@@ -172,6 +185,8 @@ Read [references/package-spec.md](references/package-spec.md). When a design-too
 - Usage guidance per surface (Tab Bar tint, Bottom Nav active/inactive, action button states, status surfaces)
 - Naming convention (e.g., `ic_tab_home_filled.svg`)
 - Accessibility notes — labels per locale, traits, contrast measurements per theme, reduced-motion fallbacks (see [references/accessibility.md](references/accessibility.md))
+- Motion specs and Lottie/dotLottie notes when motion is in scope (see [references/motion-system.md](references/motion-system.md))
+- Style plugin manifests or multi-style decision logs when used (see [references/style-packs/plugin-system.md](references/style-packs/plugin-system.md), [references/multi-style-review.md](references/multi-style-review.md))
 - Design-tool handoff (Figma Code Connect mappings, Pencil exports) when MCP available
 - Export checklist
 - Unresolved risks
@@ -183,6 +198,10 @@ Read [references/package-spec.md](references/package-spec.md). When a design-too
 - **Pencil MCP**: required for any `.pen` file — `.pen` files are encrypted and cannot be opened with `Read`/`Grep`. Use `pencil.batch_get` to read and `pencil.batch_design` to write.
 - **Other design-tool MCPs**: any server providing design-context tools — same contract pattern (read before write, transactions where supported, screenshot for visual confirmation)
 - **Image generation**: mood/exploration only, never final masters
+- **Motion validation**: validate motion spec JSON with `scripts/validate_motion_spec.py`; Lottie/dotLottie are delivery formats, not style packs.
+- **Style plugin validation**: validate `.style-pack` manifests with `scripts/validate_style_pack.py`; custom styles must pass Brand DNA and accessibility gates before Phase 7.
+- **Pixel-art checks**: use `scripts/grade/bitmap.py` for bitmap-aware crispness and palette checks when pixel-art is selected.
+- **Hand-drawn jitter**: use `scripts/apply_path_jitter.py` only with a documented deterministic seed and bounded amplitude.
 - **Web research**: when platform guidance may have changed (HIG Tab Bar specs, Material 3 navigation, WCAG 2.2 amendments)
 - **Local files (fallback)**: always search project for existing icons, brand assets, design tokens, `brand-dna.md`, color tokens, typography — fully supported when no design-tool MCP is available
 
@@ -206,7 +225,10 @@ Load only when needed:
 - [references/negative-space.md](references/negative-space.md) — counter-form, trapped space, density rhythm (loaded by phase 5 + 7 + 8 + 9)
 - [references/aesthetic-principles.md](references/aesthetic-principles.md) — 10 principles (Vignelli, Rams, Müller-Brockmann; loaded by phase 5 + 9)
 - [references/accessibility.md](references/accessibility.md) — WCAG 2.2, touch targets, screen-reader labeling, color-blind safety
-- [references/style-packs/](references/style-packs/) — Liquid Glass, chromatic duotone, claymorphism construction rules (loaded only when user picks one of these styles in Phase 5)
+- [references/motion-system.md](references/motion-system.md) — Animated/Lottie subsystem, motion spec schema, easing, reduced-motion validation; loaded only when motion is in scope
+- [references/style-packs/](references/style-packs/) — Liquid Glass, chromatic duotone, claymorphism, 3D/isometric, pixel-art, hand-drawn construction rules plus deferred-style register; loaded only when user picks one of these styles in Phase 5
+- [references/style-packs/plugin-system.md](references/style-packs/plugin-system.md) — custom `.style-pack` manifest format and validation; loaded only when the user supplies or asks for a custom style plugin
+- [references/multi-style-review.md](references/multi-style-review.md) — A/B/C client review workflow for one set generated in three styles; loaded only for multi-style review requests
 - [assets/references/](assets/references/) — calibration corpus (tier-A / tier-B / tier-C SVGs with `.notes.md` craft observations; loaded by phase 7 variant pick and phase 9 craft pass)
 - [references/platform-icon-specs.md](references/platform-icon-specs.md) — iOS/Android specs
 - [references/icon-set-evaluation.md](references/icon-set-evaluation.md) — scoring
@@ -248,6 +270,12 @@ Do not:
 - ship a state-pair that distinguishes only by color — fails for color-blind users; pair with shape (filled vs outlined)
 - ship without a 3:1 non-text contrast check on every theme the icon will render in
 - ship a style-pack icon without first verifying brand DNA permits it (every style pack has a "Refuse if" condition — honor it)
+- treat Animated/Lottie as a visual style pack — motion is a separate subsystem with its own spec, fallback, and validation
+- ship animated icons without a static frame and reduced-motion substitute
+- ship a custom `.style-pack` without validating its manifest
+- blend multiple style-pack winners after A/B/C review without explicitly locking one dominant style
+- run stochastic hand-drawn jitter without documenting the seed and amplitude
+- ship pixel-art icons without bitmap-aware native-size validation
 - claim a `.pen` file was inspected without using Pencil MCP — `.pen` files are encrypted; `Read`/`Grep` returns garbage
 - claim Figma context was used without actually invoking the Figma MCP
 - assume a design-tool MCP is connected — detect first, then state the source explicitly
