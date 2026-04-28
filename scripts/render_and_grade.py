@@ -26,6 +26,8 @@ if str(ROOT / "scripts") not in sys.path:
 
 from grade import (  # noqa: E402
     alignment as alignment_mod,
+    anti_example_similarity as anti_example_mod,
+    color_only_state as color_only_state_mod,
     config as config_mod,
     pair as pair_mod,
     reference as reference_mod,
@@ -35,6 +37,10 @@ from grade import (  # noqa: E402
     stroke as stroke_mod,
     weight as weight_mod,
 )
+
+
+# Default anti-example corpus location, resolved relative to repo root.
+DEFAULT_ANTI_EXAMPLE_CORPUS = ROOT / "assets" / "references" / "tier-c"
 
 
 def collect_svgs(target: Path) -> List[Path]:
@@ -63,7 +69,12 @@ def _pair_partner_suffix(name: str) -> Optional[str]:
     return None
 
 
-def grade_icon(path: Path, cfg: Dict[str, Any]) -> Dict[str, Any]:
+def grade_icon(
+    path: Path,
+    cfg: Dict[str, Any],
+    *,
+    anti_example_corpus: Optional[Path] = None,
+) -> Dict[str, Any]:
     name = path.name
     checks: Dict[str, Any] = {
         "silhouette": silhouette_mod.measure_legibility(path, cfg),
@@ -72,6 +83,38 @@ def grade_icon(path: Path, cfg: Dict[str, Any]) -> Dict[str, Any]:
         "stroke": stroke_mod.measure_stroke(path, cfg),
         "squint": squint_mod.measure_squint(path, cfg),
     }
+    if anti_example_corpus is not None and anti_example_corpus.is_dir():
+        if anti_example_mod.is_available():
+            try:
+                checks["anti_example_similarity"] = (
+                    anti_example_mod.check_anti_example_similarity(
+                        path,
+                        corpus_root=anti_example_corpus,
+                        config=cfg,
+                    )
+                )
+            except anti_example_mod.ReferenceUnavailable as exc:
+                checks["anti_example_similarity"] = {
+                    "passed": True,
+                    "verdict": "ok",
+                    "skipped": True,
+                    "reason": str(exc),
+                    "matches": [],
+                    "errors": [],
+                    "warnings": [f"anti_example_similarity: {exc}"],
+                }
+        else:
+            checks["anti_example_similarity"] = {
+                "passed": True,
+                "verdict": "ok",
+                "skipped": True,
+                "reason": "imagehash not installed",
+                "matches": [],
+                "errors": [],
+                "warnings": [
+                    "anti_example_similarity: imagehash not installed; check skipped"
+                ],
+            }
     return report_mod.aggregate_icon(name, checks)
 
 
@@ -129,6 +172,7 @@ def grade_pairs(
 
     results: List[Dict[str, Any]] = []
     overall_pass = True
+    hard_fail_set = False
     warnings: List[str] = []
     for root, slots in sorted(by_root.items()):
         if "filled" not in slots or "outlined" not in slots:
@@ -138,12 +182,25 @@ def grade_pairs(
         res["root"] = root
         res["filled"] = slots["filled"].name
         res["outlined"] = slots["outlined"].name
+        # Color-only state distinction: hard-fail when the pair differs only
+        # in color (selected/unselected indistinguishable in Forced Colors mode
+        # or under deuteranopia).
+        cos = color_only_state_mod.check_color_only_state(
+            slots["filled"], slots["outlined"], config=cfg
+        )
+        res["color_only_state"] = cos
+        if cos.get("hard_fail"):
+            hard_fail_set = True
+            overall_pass = False
+            for w in cos.get("warnings", []) or []:
+                warnings.append(f"{root}: {w}")
         if not res.get("passed", True):
             overall_pass = False
         results.append(res)
     return {
         "results": results,
         "passed": overall_pass,
+        "hard_fail": hard_fail_set,
         "warnings": warnings,
         "errors": [],
     }
@@ -214,6 +271,17 @@ def parse_args(argv: Optional[List[str]] = None) -> argparse.Namespace:
         default=None,
         help="Directory of reference SVGs (perceptual-hash comparison)",
     )
+    parser.add_argument(
+        "--anti-example-corpus",
+        type=Path,
+        default=None,
+        help=(
+            "Directory of tier-C anti-example SVGs. "
+            "Defaults to assets/references/tier-c/ when present. "
+            "Pass an explicit path to override or to add custom anti-examples. "
+            "Pass 'none' to disable the check."
+        ),
+    )
     return parser.parse_args(argv)
 
 
@@ -236,7 +304,21 @@ def main(argv: Optional[List[str]] = None) -> int:
         report_mod.write_reports(report, args.report_md, args.report_json)
         return 1
 
-    icons = [grade_icon(p, cfg) for p in svgs]
+    # Resolve the anti-example corpus path. Explicit "none" disables the
+    # check; an explicit path overrides; otherwise default to the in-repo
+    # tier-C corpus when present (graceful skip if the directory is missing).
+    if args.anti_example_corpus is None:
+        anti_corpus: Optional[Path] = (
+            DEFAULT_ANTI_EXAMPLE_CORPUS
+            if DEFAULT_ANTI_EXAMPLE_CORPUS.is_dir()
+            else None
+        )
+    elif str(args.anti_example_corpus).strip().lower() == "none":
+        anti_corpus = None
+    else:
+        anti_corpus = args.anti_example_corpus
+
+    icons = [grade_icon(p, cfg, anti_example_corpus=anti_corpus) for p in svgs]
     set_checks: Dict[str, Any] = {
         "balance": grade_set_balance(svgs, icons, cfg),
         "pair": grade_pairs(svgs, cfg),

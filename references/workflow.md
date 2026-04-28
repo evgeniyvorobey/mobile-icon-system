@@ -43,6 +43,7 @@ Full workflow for the icon system skill, expanded from `SKILL.md`. 13 phases, tw
 | 6. Define vocabulary | ✓ | ✓ | |
 | 7. Generate the set (variants then pick) | ✓ (2 variants) | ✓ (3+ variants) | per-icon variant generation, justified pick |
 | 8. Audit (consistency + second-eye) | ✓ | ✓ | mandatory; loops back to phase 7 on regression |
+| 8.5. Grader-driven regeneration loop | optional | ✓ | mandatory hi-end; cap 2 iterations per icon |
 | 9. Craft pass | skip | ✓ | hi-end only; uses calibration corpus |
 | 10. Evaluate | ✓ | ✓ | |
 | 11. Validate in context | ✓ | ✓ | hi-end adds themed + competitor row |
@@ -93,6 +94,7 @@ If existing set is present, decide redesign tolerance:
 
 Extract:
 - App category
+- **Domain catalog selection** — match user's stated app category to one of [`domain-metaphors/`](domain-metaphors/) (music, finance, health, productivity, e-commerce, social, dev-tools, transportation, education, gaming); load matched domain file plus `_cross-domain.md` in Phase 6 alongside universal vocabulary; if no match, fall back to universal only
 - Navigation structure (which tabs / nav items exist)
 - Full icon inventory required (Tab Bar, action, system, media, status, communication, commerce, content, social, editing, time, location, security — see [`icon-vocabulary.md`](icon-vocabulary.md) coverage map)
 - Platform priority (iOS / Android / cross-platform)
@@ -111,6 +113,7 @@ Output:
 - Base grid (24/20/16) + live area
 - Stroke weight + diagonal compensation rule
 - Style (filled / outlined / both)
+- Visual style: monochrome / outlined / filled / duotone-mono / duotone-chromatic / liquid-glass / claymorphism (default = monochrome; if user chooses a style-pack option, load the corresponding reference at [`style-packs/`](style-packs/))
 - Selected/unselected state pairing logic (must distinguish via shape, not color alone — accessibility constraint)
 - Optical sizing protocol
 - Terminal style + corner radius logic
@@ -123,7 +126,9 @@ This gate exists because changing rules mid-set requires regenerating everything
 
 ## Phase 6 — Define Vocabulary
 
-Read [`icon-vocabulary.md`](icon-vocabulary.md). For each icon needed:
+Read [`icon-vocabulary.md`](icon-vocabulary.md) PLUS — when phase 4 matched a domain — the corresponding [`domain-metaphors/{domain}.md`](domain-metaphors/) file plus [`domain-metaphors/_cross-domain.md`](domain-metaphors/_cross-domain.md). When the domain catalog conflicts with universal (e.g., heart in health = anatomical, in universal = romantic), the domain wins for this app — explicitly note the override in the icon-system rules.
+
+For each icon needed:
 - Confirm metaphor (avoid clichés)
 - Note recognition risks
 - Note cross-cultural readability
@@ -189,6 +194,33 @@ This is the "sleep on it" pass that separates craft from competence. The model m
 - Remaining risks
 
 This phase is the single biggest quality lever in the workflow. Do not collapse it into phase 10 (Evaluate) — evaluation scores; this phase fixes.
+
+## Phase 8.5 — Grader-Driven Regeneration Loop
+
+After Pass A (consistency) and Pass B (second-eye critique), run the programmatic grader with regeneration brief generation:
+
+```
+python3 scripts/grade_with_fixes.py <icons_dir> --brief-out regen_brief.md
+```
+
+The grader rasterizes every SVG, runs the eight algorithmic checks (silhouette, weight, alignment, stroke uniformity, squint/blur, set balance, pair distinction, optional perceptual-hash reference), and for any icon with verdict `warn` or `hard_fail` writes a per-icon fix prompt that includes:
+
+- Which checks failed and the measured values vs. thresholds
+- The corresponding [`craft-rubric.md`](craft-rubric.md) citation per failing check
+- A pointer to the same-metaphor tier-A reference SVG (when one exists in [`assets/references/tier-a/`](../assets/references/tier-a/)) plus the verbatim "What a generator should learn" block from its `.notes.md`
+- The original SVG markup, so the LLM has the path data to regenerate from
+- Specific, measurable fix instructions (not "make it better" — "stroke CV is 0.188 vs. 0.150 threshold; verify every segment uses the same `stroke-width`")
+
+If `regen_brief.md` is non-empty, **read it and regenerate every icon flagged**, applying the brief's instructions. Re-run the grader. Cap at **2 grader iterations per icon** — if any icon still fails after 2 iterations, surface it as an unresolved item in phase 12 (Improve or question) rather than looping indefinitely.
+
+This loop is **mandatory for hi-end tier**; optional but recommended for Standard tier. It is the algorithmic complement to Pass B's LLM judgment loop — Pass B catches taste failures, Pass C catches measurement failures (the two have low overlap).
+
+Exit codes from `grade_with_fixes.py`:
+- `0` — every icon passes; no regeneration needed
+- `1` — warnings only; regeneration recommended for failing icons
+- `2` — at least one hard failure; blocking for ship
+
+The grader is API-agnostic by design — it does not call out to any LLM. It writes a Markdown brief; the LLM (Claude / Codex / whichever) reads the brief and rewrites the SVG. Regeneration happens in the same conversation, not in a hidden subprocess.
 
 ## Phase 9 — Craft Pass (Hi-end Only)
 
@@ -265,9 +297,10 @@ Do not self-resolve gate decisions. Do not proceed without explicit user confirm
 
 ## Iteration Loops
 
-The workflow has two intentional loops:
+The workflow has three intentional loops:
 
 1. **Variant search (within Phase 7)** — N variants per icon, then pick. The "loop" is internal to phase 7; it doesn't iterate over phases.
 2. **Craft regression (Phase 8 Pass B → Phase 7)** — when second-eye critique scores any icon below B on any axis, regenerate that icon only. Cap at 2 iterations per icon to bound cost.
+3. **Grader regeneration (Phase 8.5)** — when `scripts/grade_with_fixes.py` flags an icon with `warn` or `hard_fail`, read the per-icon fix prompt in `regen_brief.md` and regenerate that icon. Cap at 2 grader iterations per icon. Mandatory for hi-end; recommended for Standard.
 
-Both loops are mandatory. They are the difference between "first idea" output and craft-level output.
+All three loops are mandatory for hi-end tier; loops 1 and 2 are mandatory for Standard. Together they are the difference between "first idea" output and craft-level output.

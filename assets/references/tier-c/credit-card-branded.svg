@@ -1,0 +1,43 @@
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  width="24"
+  height="24"
+  viewBox="0 0 24 24"
+  fill="none"
+  stroke="currentColor"
+  stroke-width="1.5"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+>
+  <!-- ANTI-EXAMPLE: brand-coupled credit card.
+       Compare against tier-a/credit-card.svg (Lucide): 2 primitives only —
+       rect + horizontal stripe in upper third. Deliberately omits the chip
+       square and any brand mark.
+       This anti-example adds (a) a square chip block in the lower-left,
+       (b) a magnetic stripe up top, AND (c) a Visa-like swoosh in the lower-right
+       made of two stacked arcs. The swoosh couples the icon to a specific
+       payment brand, so the meaning collapses from "credit card in general" to
+       "Visa specifically". Once a generic icon points at one brand, every other
+       brand looks wrong by association.
+       Failure mode: brand-coupled metaphor — semantic meaning narrowed to a
+       single payment brand by ornamental detail.
+       Violates references/icon-vocabulary.md "Money / Payment" guidance
+       (avoid brand-bound details) and aesthetic principle 9 (metaphor before
+       ornament) and 1 (restraint). -->
+
+  <!-- Card body -->
+  <rect x="2" y="5" width="20" height="14" rx="2" />
+
+  <!-- Magnetic stripe (top band) -->
+  <line x1="2" y1="9" x2="22" y2="9" />
+
+  <!-- Chip square -->
+  <rect x="5" y="12" width="4" height="3" rx="0.5" />
+  <!-- Chip pad detail (cross-mullion) — extra noise at 20pt -->
+  <line x1="7" y1="12" x2="7" y2="15" />
+  <line x1="5" y1="13.5" x2="9" y2="13.5" />
+
+  <!-- Visa-like swoosh: two stacked arcs in lower-right -->
+  <path d="M14 15 a3 3 0 0 1 5 0" />
+  <path d="M15 16.5 a2.5 2.5 0 0 1 4 0" />
+</svg>

@@ -22,10 +22,11 @@ def _verdict_for_icon(icon: Dict[str, Any]) -> str:
 def aggregate_icon(name: str, checks: Dict[str, Any]) -> Dict[str, Any]:
     """Roll a single icon's per-check results into one dict + verdict."""
     # Default hard-fail keys catch unambiguous failures: silhouette
-    # regressions across sizes (icon literally vanishes at 16pt) and pair
-    # distinction at the set level. Alignment, single-icon weight, stroke,
-    # and squint are warn-by-default because they all produced false
-    # positives on the tier-A corpus during calibration:
+    # regressions across sizes (icon literally vanishes at 16pt) and the
+    # semantic-failure checks added in v0.4 (anti_example_similarity,
+    # color_only_state). Alignment, single-icon weight, stroke, and squint
+    # are warn-by-default because they all produced false positives on the
+    # tier-A corpus during calibration:
     #   - alignment: tier-A icons (Lucide bell, Tabler settings) use
     #     mathematically-derived endpoints (12 ± √3) that read as off-grid
     #   - single-icon weight: minimal icons (check, x) sit below 0.10 floor
@@ -36,7 +37,12 @@ def aggregate_icon(name: str, checks: Dict[str, Any]) -> Dict[str, Any]:
     #     teeter at the 0.05 signal threshold
     # See craft-rubric.md §2 caveat for the math-derivation exemption.
     # Use --strict to re-promote alignment + weight to hard_fail.
-    hard_fail_keys = ("silhouette",)
+    #
+    # The semantic-failure checks (anti_example_similarity, color_only_state)
+    # were promoted from warn to hard_fail in v0.4 — they catch unambiguous
+    # failures the LLM was producing (gendered profile silhouettes,
+    # color-only state distinctions). See craft-rubric.md §10.
+    hard_fail_keys = ("silhouette", "anti_example_similarity", "color_only_state")
     warn_keys = ("alignment", "weight", "stroke", "squint")
     errors: List[str] = []
     warnings: List[str] = []
@@ -49,6 +55,11 @@ def aggregate_icon(name: str, checks: Dict[str, Any]) -> Dict[str, Any]:
             errors.append(f"{key}: {err}")
         for warn in result.get("warnings", []) or []:
             warnings.append(f"{key}: {warn}")
+        # Honor explicit hard_fail flags even when ``passed`` is True
+        # (semantic checks may surface a hard_fail directly).
+        if result.get("hard_fail"):
+            hard_fail = True
+            continue
         if not result.get("passed", True):
             if key in hard_fail_keys:
                 hard_fail = True
@@ -193,6 +204,55 @@ def render_markdown(report: Dict[str, Any]) -> str:
     for icon in report["icons"]:
         out.append(_icon_row(icon))
     out.append("")
+
+    # Anti-example similarity table: surface which anti-example the icon
+    # most resembled, the failure mode it represents, and the pHash distance.
+    anti_rows: List[str] = []
+    for icon in report["icons"]:
+        ae = (icon.get("checks") or {}).get("anti_example_similarity") or {}
+        if not isinstance(ae, dict) or ae.get("skipped"):
+            continue
+        closest = ae.get("closest")
+        if not closest:
+            continue
+        anti_rows.append(
+            f"| {icon['name']} | {ae.get('verdict', 'n/a')} | "
+            f"{closest.get('anti_example', 'n/a')} | "
+            f"{closest.get('failure_mode', 'unspecified')} | "
+            f"{closest.get('phash_distance', 'n/a')} |"
+        )
+    if anti_rows:
+        out.append("## Anti-example similarity")
+        out.append(
+            "| Icon | Verdict | Closest anti-example | Failure mode | pHash distance |"
+        )
+        out.append("| --- | --- | --- | --- | --- |")
+        out.extend(anti_rows)
+        out.append("")
+
+    # Color-only state diagnostics: surface every state pair's color vs
+    # shape diff so reviewers can sanity-check borderline calls.
+    pair_block = report.get("set_checks", {}).get("pair") or {}
+    pair_results = pair_block.get("results") or []
+    cos_rows: List[str] = []
+    for pr in pair_results:
+        cos = pr.get("color_only_state") or {}
+        if not isinstance(cos, dict):
+            continue
+        cos_rows.append(
+            f"| {pr.get('root', 'n/a')} | {cos.get('verdict', 'n/a')} | "
+            f"{_format_float(cos.get('color_diff_ratio'))} | "
+            f"{_format_float(cos.get('shape_diff_ratio'))} | "
+            f"{cos.get('reason', '')} |"
+        )
+    if cos_rows:
+        out.append("## Color-only state distinction")
+        out.append(
+            "| Pair | Verdict | Color diff | Shape diff | Notes |"
+        )
+        out.append("| --- | --- | --- | --- | --- |")
+        out.extend(cos_rows)
+        out.append("")
 
     failures = [i for i in report["icons"] if i["verdict"] != "ok"]
     if failures:

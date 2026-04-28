@@ -1,7 +1,7 @@
 ---
 name: mobile-icon-system
-version: 0.3.0
-description: Use when designing, refreshing, or auditing a brand-coherent UI icon set for a mobile app — covers the full app icon system (Tab Bar / Bottom Nav, action, system, media, status, communication, commerce, content, social, editing, time, location, security). Best for icon-set work that must inherit visual DNA from an existing logo or design system, stay consistent across the whole set, meet WCAG 2.2 accessibility, render at tier-A craft level (calibrated against a hand-curated reference corpus, generate-N-pick-1 variant search, mandatory second-eye critique loop), and ship as platform-ready iOS/Android assets — with optional Figma / Pencil MCP integration where available.
+version: 0.4.0
+description: Use when designing, refreshing, or auditing a brand-coherent UI icon set for a mobile app — covers the full app icon system (Tab Bar / Bottom Nav, action, system, media, status, communication, commerce, content, social, editing, time, location, security) plus 10 vertical-domain catalogs (music, finance, health, productivity, e-commerce, social, dev-tools, transportation, education, gaming) plus 3 visual-style packs (Liquid Glass, chromatic duotone, claymorphism). Best for icon-set work that must inherit visual DNA from an existing logo or design system, stay consistent across the whole set, meet WCAG 2.2 accessibility, render at tier-A craft level (calibrated against a 44-metaphor / 118-SVG hand-curated reference corpus, generate-N-pick-1 variant search, mandatory second-eye critique loop, grader-driven regeneration loop, semantic-failure detection), and ship as platform-ready iOS/Android assets — with optional Figma / Pencil MCP integration where available.
 ---
 
 # Mobile Icon System
@@ -61,7 +61,7 @@ Read [references/project-audit.md](references/project-audit.md) and, when a desi
 
 ### 4. Build context
 
-Extract: app category, navigation structure (which tabs / nav items exist), full icon inventory required across categories ([references/icon-vocabulary.md](references/icon-vocabulary.md) coverage map), platform priority (iOS / Android / cross-platform), state requirements (selected/unselected for Tab Bar; pressed / disabled for action icons), system icon coexistence (does the app also use SF Symbols / Material in places?), target locales, accessibility tier (WCAG AA default, AAA if user requests). Preserve user's existing direction unless they ask for a reset.
+Extract: app category, **domain catalog selection** — match user's stated app category to one of [references/domain-metaphors/](references/domain-metaphors/) (music, finance, health, productivity, e-commerce, social, dev-tools, transportation, education, gaming); load matched domain file plus `_cross-domain.md` in Phase 6 alongside universal vocabulary; if no match, fall back to universal only. Then: navigation structure (which tabs / nav items exist), full icon inventory required across categories ([references/icon-vocabulary.md](references/icon-vocabulary.md) coverage map), platform priority (iOS / Android / cross-platform), state requirements (selected/unselected for Tab Bar; pressed / disabled for action icons), system icon coexistence (does the app also use SF Symbols / Material in places?), target locales, accessibility tier (WCAG AA default, AAA if user requests). Preserve user's existing direction unless they ask for a reset.
 
 ### 5. Define icon system rules
 
@@ -73,6 +73,7 @@ Output:
 - Base grid (24×24 / 20×20 / 16×16) with live area + keyline padding
 - Stroke weight (e.g., 1.75pt) + exception rules
 - Style: filled / outlined / duotone (one primary, one optional secondary)
+- Visual style: monochrome / outlined / filled / duotone-mono / duotone-chromatic / liquid-glass / claymorphism (default = monochrome; if user chooses a style-pack option, load the corresponding reference at [references/style-packs/](references/style-packs/))
 - Selected/unselected state pairing (Tab Bar) — must distinguish via shape, not color alone
 - Optical sizing balance protocol
 - Terminal style + corner radius logic
@@ -83,7 +84,7 @@ State strongest direction in one sentence. **Ask user to choose / confirm.** Do 
 
 ### 6. Define vocabulary
 
-Read [references/icon-vocabulary.md](references/icon-vocabulary.md).
+Read [references/icon-vocabulary.md](references/icon-vocabulary.md) PLUS — when phase 4 matched a domain — the corresponding [references/domain-metaphors/{domain}.md](references/domain-metaphors/) file plus [references/domain-metaphors/_cross-domain.md](references/domain-metaphors/_cross-domain.md). When the domain catalog conflicts with universal (e.g., heart in health = anatomical, in universal = romantic), the domain wins for this app — explicitly note the override in the icon-system rules.
 
 For each icon needed across the full set (Tab Bar, action, system, media, status, communication, commerce, content, social, editing, time, location, security):
 - Confirm metaphor (avoid category clichés)
@@ -127,7 +128,15 @@ Two mandatory passes before craft / evaluation. Both apply to the winning set ch
 
 **Pass B — Second-eye critique.** Step out of the brand context. Read the set as if you have never seen the Brand DNA, the icon-system rules, the user's brief. Read [references/craft-rubric.md](references/craft-rubric.md), [references/negative-space.md](references/negative-space.md), [references/aesthetic-principles.md](references/aesthetic-principles.md). Score every icon A/B/C on each rubric axis. For any axis scoring below B: **loop back to step 7** for that icon (regenerate variants, re-pick), not the whole set. Document the loop iterations in the audit output.
 
-Output: per-icon scorecard, corrections made, loop iterations, remaining risks.
+**Pass C — Grader-driven regeneration loop.** After Pass A and Pass B, run the programmatic grader with brief generation:
+
+```
+python3 scripts/grade_with_fixes.py <icons_dir> --brief-out regen_brief.md
+```
+
+If `regen_brief.md` is non-empty, **read it and regenerate every icon flagged**, applying the brief's specific fix instructions (which check failed by how much, the craft-rubric.md citation, the tier-A reference's "What a generator should learn" block, the original SVG markup). Re-run the grader. Cap at **2 grader iterations per icon** — if any icon still fails after 2 iterations, surface it as an unresolved item in phase 12 (Improve or question). This pass is mandatory for hi-end tier; optional but recommended for Standard tier.
+
+Output: per-icon scorecard, corrections made, loop iterations, grader iterations, remaining risks.
 
 ### 9. Craft pass (hi-end only)
 
@@ -191,11 +200,13 @@ Load only when needed:
 - [references/design-tool-integrations.md](references/design-tool-integrations.md) — Figma / Pencil / generic MCP integration
 - [references/icon-grid-construction.md](references/icon-grid-construction.md) — grid + stroke rules
 - [references/icon-vocabulary.md](references/icon-vocabulary.md) — full-set metaphor library (13 categories) with calibration-corpus references per metaphor
+- [references/domain-metaphors/](references/domain-metaphors/) — 10 domain catalogs (music, finance, health, productivity, e-commerce, social, dev-tools, transportation, education, gaming) + cross-domain patterns + README; loaded only when user states a matching app domain in Phase 4
 - [references/cross-icon-consistency.md](references/cross-icon-consistency.md) — set balancing
 - [references/craft-rubric.md](references/craft-rubric.md) — numerical thresholds for craft grading (cited; loaded by phase 7 variant pick + phase 8 critique)
 - [references/negative-space.md](references/negative-space.md) — counter-form, trapped space, density rhythm (loaded by phase 5 + 7 + 8 + 9)
 - [references/aesthetic-principles.md](references/aesthetic-principles.md) — 10 principles (Vignelli, Rams, Müller-Brockmann; loaded by phase 5 + 9)
 - [references/accessibility.md](references/accessibility.md) — WCAG 2.2, touch targets, screen-reader labeling, color-blind safety
+- [references/style-packs/](references/style-packs/) — Liquid Glass, chromatic duotone, claymorphism construction rules (loaded only when user picks one of these styles in Phase 5)
 - [assets/references/](assets/references/) — calibration corpus (tier-A / tier-B / tier-C SVGs with `.notes.md` craft observations; loaded by phase 7 variant pick and phase 9 craft pass)
 - [references/platform-icon-specs.md](references/platform-icon-specs.md) — iOS/Android specs
 - [references/icon-set-evaluation.md](references/icon-set-evaluation.md) — scoring
@@ -220,6 +231,7 @@ Do not:
 - design icons one at a time when a set is requested — always think and balance across the whole set
 - generate only one variant per icon — produce 2-3 distinct variants and pick a winner per icon (step 7)
 - skip the second-eye critique pass (step 8 / Pass B) — the consistency audit alone does not catch craft regressions
+- skip the grader-driven regeneration loop (step 8 / Pass C) on hi-end — the algorithmic grader catches measurement failures Pass B's LLM judgment misses
 - skip the Brand DNA step — icons must inherit, not invent
 - skip the icon system rules gate — user must confirm grid / stroke / style / accessibility budget before generation
 - mix incompatible stroke weights or terminal styles in one set
@@ -235,6 +247,7 @@ Do not:
 - use color to rescue a weak silhouette
 - ship a state-pair that distinguishes only by color — fails for color-blind users; pair with shape (filled vs outlined)
 - ship without a 3:1 non-text contrast check on every theme the icon will render in
+- ship a style-pack icon without first verifying brand DNA permits it (every style pack has a "Refuse if" condition — honor it)
 - claim a `.pen` file was inspected without using Pencil MCP — `.pen` files are encrypted; `Read`/`Grep` returns garbage
 - claim Figma context was used without actually invoking the Figma MCP
 - assume a design-tool MCP is connected — detect first, then state the source explicitly

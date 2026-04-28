@@ -64,6 +64,35 @@ DEFAULTS: Dict[str, Any] = {
         "plagiarism_max": 5,
         "off_vocab_min": 22,
     },
+    "anti_example": {
+        "render_size": 64,
+        "hash_size": 8,
+        # Below this distance the candidate is a near-clone of a documented
+        # anti-example — promoted from warn to hard_fail in v0.4.
+        "hard_fail_threshold": 5,
+        # Suspicious resemblance band: warn but do not block.
+        "warn_threshold": 12,
+        # How many closest matches to surface in diagnostics.
+        "top_n": 3,
+    },
+    "color_only_state": {
+        # Pair rendering size; matches grade.pair so the same RGBA delta is
+        # comparable across the two checks.
+        "render_size": 24,
+        "channel_diff_threshold": 16,
+        # Floor for "the pair is meaningfully different at all" — below this
+        # the existing pair-distinction check is what catches the failure.
+        "min_color_diff": 0.10,
+        # Ceiling for "shapes are essentially identical" — when shape diff
+        # is below this AND color diff is above the floor, the failure mode
+        # is unambiguously color-only and we hard-fail.
+        "max_shape_diff_for_color_only": 0.05,
+        # Floor for "shapes meaningfully differ" — at or above this the
+        # pair clearly differs structurally and the check passes.
+        "min_shape_diff": 0.10,
+        # 50% binarization for greyscale shape comparison.
+        "luminance_threshold": 128,
+    },
 }
 
 

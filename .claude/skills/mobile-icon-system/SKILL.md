@@ -18,6 +18,7 @@ When invoked:
    - `${CLAUDE_SKILL_DIR}/../../../references/design-tool-integrations.md`
    - `${CLAUDE_SKILL_DIR}/../../../references/icon-grid-construction.md`
    - `${CLAUDE_SKILL_DIR}/../../../references/icon-vocabulary.md`
+   - `${CLAUDE_SKILL_DIR}/../../../references/domain-metaphors/` (load matched domain file + `_cross-domain.md` only when phase 4 matches a domain)
    - `${CLAUDE_SKILL_DIR}/../../../references/cross-icon-consistency.md`
    - `${CLAUDE_SKILL_DIR}/../../../references/accessibility.md`
    - `${CLAUDE_SKILL_DIR}/../../../references/craft-rubric.md`

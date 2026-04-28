@@ -1,0 +1,37 @@
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  width="24"
+  height="24"
+  viewBox="0 0 24 24"
+  stroke-width="1.5"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+>
+  <!-- ANTI-EXAMPLE: duotone where the entire state distinction is color.
+       The mass layer is filled `red` and the outline is `black` stroke. The
+       "selected" version of this icon would differ only by changing red to
+       gray; the "unselected" by going to outline-only. State is conveyed
+       purely by color — no shape change, no stroke-weight change, no shape
+       addition.
+       Fails accessibility: invisible in Forced Colors mode (mass layer
+       collapses), unreadable under deuteranopia simulation (red can't be
+       distinguished from gray), and the duotone family inherits this failure
+       across every icon that uses the same template.
+       Compare against tier-a-duotone/heart-duotone.svg (Phosphor): the duotone
+       family there uses an opacity-modulated mass layer on top of a
+       currentColor outline — both layers respond to currentColor, so state
+       changes flow through both and accessibility-aware rendering still
+       resolves the silhouette.
+       Failure mode: color-only state for the duotone family.
+       Violates references/accessibility.md (color-only state distinction) and
+       aesthetic principle 6 (color compensating for weak silhouette is loud,
+       not informative). -->
+
+  <!-- Mass / fill layer — bound to "red" rather than currentColor + opacity -->
+  <path d="M12 4 a4 4 0 0 1 4 4 c0 4 -4 7 -4 7 s-4 -3 -4 -7 a4 4 0 0 1 4 -4 z"
+        fill="red" stroke="none" />
+
+  <!-- Outline layer — bound to "black" rather than currentColor -->
+  <path d="M12 4 a4 4 0 0 1 4 4 c0 4 -4 7 -4 7 s-4 -3 -4 -7 a4 4 0 0 1 4 -4 z"
+        fill="none" stroke="black" />
+</svg>

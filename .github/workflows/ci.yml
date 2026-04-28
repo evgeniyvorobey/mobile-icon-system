@@ -67,5 +67,11 @@ jobs:
         run: python3 scripts/smoke_test_grade_pair.py
       - name: Smoke test grade.reference
         run: python3 scripts/smoke_test_grade_reference.py
+      - name: Smoke test grade.anti_example_similarity
+        run: python3 scripts/smoke_test_grade_anti_example.py
+      - name: Smoke test grade.color_only_state
+        run: python3 scripts/smoke_test_grade_color_only_state.py
       - name: Smoke test grade end-to-end pipeline
         run: python3 scripts/smoke_test_grade_end_to_end.py
+      - name: Smoke test grade_with_fixes (regeneration brief)
+        run: python3 scripts/smoke_test_grade_with_fixes.py

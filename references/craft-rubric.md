@@ -222,10 +222,39 @@ For phase 8 Pass B (second-eye critique), the LLM must score every icon on every
 | Negative space (numbers) | yes | yes (rhythm) | §6 |
 | Set-level balance | yes | no | §7 |
 | Squint / silhouette | yes | yes | §8 |
-| Family resemblance | no | yes | see [`aesthetic-principles.md`](aesthetic-principles.md) |
+| Anti-example similarity | yes (v0.4+) | yes | §10.1 |
+| Color-only state distinction | yes (v0.4+) | yes | §10.2 |
+| Family resemblance | partial (via §10.1) | yes | see [`aesthetic-principles.md`](aesthetic-principles.md) |
 | Restraint / one-ornament | no | yes | see [`aesthetic-principles.md`](aesthetic-principles.md) |
-| Intentionality | no | yes | see [`aesthetic-principles.md`](aesthetic-principles.md) |
-| Metaphor priority | no | yes | see [`icon-vocabulary.md`](icon-vocabulary.md) |
+| Intentionality | partial (via §10.1) | yes | see [`aesthetic-principles.md`](aesthetic-principles.md) |
+| Metaphor priority | partial (via §10.1) | yes | see [`icon-vocabulary.md`](icon-vocabulary.md) |
+
+## 10. Semantic failures (programmatic)
+
+Added in v0.4. These are the **first programmatic checks** for what §9's table previously listed as "LLM-judgment only" axes (family resemblance, intentionality, metaphor priority). They work by leveraging the hand-curated tier-C anti-example corpus as ground truth: if a candidate icon resembles a documented failure mode closely enough, that resemblance is itself the diagnosis.
+
+Both checks are **hard-fail by default** — they catch unambiguous failures rather than borderline craft questions, so warn-only would let real failure modes through.
+
+### 10.1 Anti-example similarity
+
+- **A:** pHash Hamming distance to every tier-C anti-example > 12 at hash_size=8 (default)
+- **B (warn):** distance ≤ 12 (suspicious resemblance to a documented failure mode — review against the matching anti-example's `.notes.md`)
+- **C (hard-fail):** distance ≤ 5 (near-clone of a documented failure mode — the LLM has reproduced an icon known to fail; regenerate with the matching `.notes.md` Failure-mode section read aloud as a constraint)
+- **Source:** Hamming-distance thresholds calibrated empirically against the tier-A and tier-C corpora — clean Lucide / Phosphor / Tabler reference icons land at distance ≥ 22 from every tier-C anti-example, while exact reproductions land at distance 0.
+- **Operationalized:** [`scripts/grade/anti_example_similarity.py`](../scripts/grade/anti_example_similarity.py); CLI flag `--anti-example-corpus PATH` overrides or extends the default tier-C corpus.
+- **Why hard-fail:** the failure modes documented in [`assets/references/tier-c/`](../assets/references/tier-c/) (gendered profile silhouette, 12-tooth gear blob, color-only state indicator, over-detailed home/calendar) are not borderline craft — they're known regressions. If the LLM produces a pHash near-clone of one, it has reproduced the exact mistake the anti-example was designed to catch.
+- **Note on rendering:** the check composites RGBA renders over a white background before hashing, so SVGs that use `stroke="currentColor"` (default fill `none`) hash to their visible form rather than collapsing to all-zero.
+- **Powerful with the corpus, not the code:** when v0.5 adds more tier-C exemplars (over-rendered envelope, gendered shopping bag, color-only chip badges), this check automatically becomes more discerning — no code change needed.
+
+### 10.2 Color-only state distinction
+
+- **A:** state pair shape difference ≥ 10% of pixels (color-blind, after PIL `convert('L')` and 50% binarization)
+- **B (warn):** shape difference 5-10% — borderline, review manually
+- **C (hard-fail):** color difference ≥ 10% AND shape difference < 5% — the pair LOOKS different in color but is the same shape
+- **Source:** WCAG 2.2 §1.4.1 (Use of Color), Microsoft Forced Colors mode documentation, deuteranopia / protanopia simulation literature. The 10% color floor distinguishes this check from "the pair is identical" (which the existing pair-distinction check at [`scripts/grade/pair.py`](../scripts/grade/pair.py) already catches).
+- **Operationalized:** [`scripts/grade/color_only_state.py`](../scripts/grade/color_only_state.py); runs automatically on every detected `_filled` / `_outlined` pair.
+- **Why hard-fail:** a pair that survives only via color fails Forced Colors mode (the OS overrides the color), is indistinguishable under deuteranopia/protanopia, and conveys no semantic difference to a screen reader (the SVGs are byte-identical except for one attribute). This is an accessibility regression, not a craft preference. See [`accessibility.md`](accessibility.md) and the tier-C exemplar [`tier-c/notification-color-state.svg`](../assets/references/tier-c/notification-color-state.svg).
+- **Algorithm note:** the check uses the full 4-channel RGBA delta for the color-aware diff (so `fill="red"` vs `fill="blue"` registers as a real difference) and PIL's `convert('L')` for the color-blind diff (so `fill="red"` vs `fill="black"` collapses to the same shape).
 
 ## Sources bibliography
 

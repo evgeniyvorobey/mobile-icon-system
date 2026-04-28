@@ -1,6 +1,6 @@
 # Mobile Icon System Skill
 
-**Current version: 0.3.0** | [Changelog](CHANGELOG.md) | [Migration guide](MIGRATION.md)
+**Current version: 0.4.0** | [Changelog](CHANGELOG.md) | [Migration guide](MIGRATION.md)
 
 A self-contained AI skill for Codex and Claude that designs, refines, audits, and packages the **full brand icon set** for a mobile app — Tab Bar / Bottom Nav, action, system, media, status, communication, commerce, content, social, editing, time, location, and security icons — all inheriting one Brand DNA, validated for WCAG 2.2 accessibility and grade-checked against a hand-curated craft rubric, and shipped as platform-ready iOS/Android assets.
 

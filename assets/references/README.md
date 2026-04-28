@@ -9,8 +9,27 @@ skill. It is read by the LLM (Claude / Codex) at two points in the workflow:
   every applicable tier-A reference and explains, in writing, why the icon
   meets or fails each craft trait noted in the reference's `.notes.md`.
 
-The corpus is small on purpose. Twenty-six SVGs are enough to anchor every
-tier-A craft trait the skill names; more would dilute the signal.
+The corpus is sized deliberately. As of v0.4 it is roughly 117 SVGs covering
+44 metaphors, 9 explicit state pairs, 6 native-small (16/20pt) exemplars,
+and 5 duotone exemplars — enough to anchor every tier-A craft trait the
+skill names without diluting the signal.
+
+## What's covered (v0.4)
+
+- **44 metaphors** at tier-A — all Tab Bar destinations, all common actions,
+  all status indicators, and the corpus's first text-formatting and
+  security-family entries.
+- **9 explicit state pairs** — outlined/filled (heart, home, star, bookmark),
+  on/off (lock, eye, mic, cloud), and direction-mirror (chevron, sort,
+  reply/forward, refresh-cw/ccw, download/upload).
+- **6 native-small exemplars** — 5 mini at 16pt + 1 micro at 20pt — for
+  calibrating fill-only construction at native deployment sizes.
+- **5 duotone exemplars** — bell, heart, gear, house, camera — calibrating
+  the mass-layer-plus-outline construction with `currentColor`-bound
+  styling.
+- **Tier-B distributed across 4 libraries** (Heroicons, Tabler, Phosphor,
+  Lucide) so the LLM sees competent-but-flawed examples from a
+  cross-section of the ecosystem.
 
 ## Tier definitions
 
@@ -71,36 +90,58 @@ repo only.
 - All upstream SVGs are MIT, ISC, or Apache-2.0 — see
   [`ATTRIBUTIONS.md`](ATTRIBUTIONS.md) for per-source attribution and links to
   the upstream LICENSE files.
-- The three hand-crafted tier-C SVGs (`home-overdetailed.svg`,
-  `user-gendered.svg`, `notification-color-state.svg`) are MIT-licensed under
-  this repo's [`LICENSE`](../../LICENSE).
+- The six hand-crafted tier-C SVGs (`home-overdetailed.svg`,
+  `user-gendered.svg`, `notification-color-state.svg`,
+  `fingerprint-9loops.svg`, `credit-card-branded.svg`,
+  `duotone-color-only.svg`) are MIT-licensed under this repo's
+  [`LICENSE`](../../LICENSE).
 - Notes files (`*.notes.md`), `manifest.json`, `README.md`, `ATTRIBUTIONS.md`,
   and `tier-c/README.md` are MIT-licensed under this repo.
 
 ## Honest limitations
 
-The corpus is deliberately scoped — it does not yet cover every gap:
+The v0.4 corpus closed many gaps that v0.3 carried, but it is still
+deliberately scoped. v0.5 should still address:
 
-- **Coverage is partial.** 16 tier-A icons cannot represent the full ~50–80
-  icon set a typical app needs. The corpus prioritizes the most common
-  metaphors (tab bar + actions + a few status); rare metaphors (cast,
-  picture-in-picture, equalizer, etc.) have no calibration reference yet.
-- **One library per metaphor for tier B.** Heroicons supplies most tier-B
-  references; Material Symbols and Carbon are not yet represented at tier B.
-- **Tier C is not exhaustive.** Five anti-examples cover four named failure
-  modes (over-detail, gendered, color-only state, blob-at-20pt). There are
-  more (e.g., trend-of-the-week styling, color compensating for weak
-  silhouette, drift between corner radii across a set) that the LLM is told
-  about in `aesthetic-principles.md` but cannot calibrate against here.
-- **Filled / duotone variants are sparse.** Two filled exemplars (heart, home)
-  and zero duotone references. Sets shipping in those styles will rely on the
-  outline references plus the rules in `references/`.
-- **No platform-native references.** SF Symbols and Material Symbols Outlined
-  ship with the OS rather than as standalone open files; SF Symbols
-  specifically cannot be redistributed under our license. The skill calibrates
-  craft from the open-license sources above and refers the user to platform
-  references via `references/platform-icon-specs.md` for native deployment.
+1. **Pause / Stop / Skip media controls** — only `play.svg` is calibrated
+   today; the rest of the transport family is missing.
+2. **Volume + Mute state pair** — neither is in the corpus.
+3. **Cast / AirPlay / Picture-in-Picture** — no exemplars.
+4. **Map / Compass / Navigation arrow** (turn-by-turn) — only `map-pin.svg`
+   covers location, and even that is the static pin, not the live arrow.
+5. **Accessibility / Help / Info / Theme** — these are essential utility
+   metaphors with no calibration anchor yet.
+6. **Trending / Live / Record** — content-state indicators not represented.
+7. **Group / Community / Follow / Block** — the single-person `user.svg`
+   does not generalize, and LLMs default to gendered clusters when asked
+   for multi-person silhouettes (see `tier-c/user-gendered.svg`). Needs
+   distinct anchors.
+8. **Cart-vs-Bag-vs-Wallet trio** finished — tag/discount, receipt, and gift
+   would complete the commerce family.
+9. **Archive / File-type variants** (PDF, IMG) — `file.svg` and `folder.svg`
+   are present but the variants are not.
+10. **Tier-C coverage gaps** — the v0.4 corpus added brand-coupled and
+    color-only-duotone failure modes; trend-of-the-week styling, color
+    compensating for weak silhouette, drift between corner radii, and
+    family-level inconsistency are still under-anchored.
+11. **Multi-library tier-A picks for the same metaphor** — second tier-A
+    from a different library for Home, Search, Settings, Heart, Bell, and
+    Calendar would let the LLM see "two correct ways to do this."
+12. **Material Symbols Outlined and Carbon at tier-A** — both libraries
+    appear only at tier-C in v0.4.
+13. **Platform-native references** — still excluded by license. SF Symbols
+    cannot be redistributed; the skill refers the user to
+    `references/platform-icon-specs.md` for native deployment.
+14. **Native large-size exemplars** — 32pt or 40pt canvas references are
+    absent (mini-16, micro-20, and standard-24 are the three sizes covered).
+15. **Animated state transitions** — would land in a `tier-d-motion/`
+    directory with `.md` notes, not yet created.
 
-These gaps are tracked. To extend the corpus, fork, add the SVG + `.notes.md`,
-re-run `fetch_references.py --update`, and submit a PR including the
-calibration observation in the same path-data style as the existing notes.
+The corpus reaches the **size-of-corpus diminishing-returns boundary at
+~80 SVGs** (we sit at ~117 entries today, with most over the threshold being
+state-pair siblings and tier-B examples for craft contrast). v0.5 expansion
+should be additive in *kind* (filling named gaps), not in *count*.
+
+To extend the corpus, fork, add the SVG + `.notes.md`, re-run
+`fetch_references.py --update`, and submit a PR including the calibration
+observation in the same path-data style as the existing notes.

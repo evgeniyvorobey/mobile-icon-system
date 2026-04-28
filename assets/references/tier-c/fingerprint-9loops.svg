@@ -1,0 +1,33 @@
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  width="24"
+  height="24"
+  viewBox="0 0 24 24"
+  fill="none"
+  stroke="currentColor"
+  stroke-width="1"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+>
+  <!-- ANTI-EXAMPLE: fingerprint as 9 concentric perfect circles.
+       A real fingerprint reads as a few visible offset arcs (see tier-a/fingerprint.svg
+       from Phosphor: 7 partial loops, none concentric, each with slightly different
+       center and radius so the silhouette breathes). This anti-example does the
+       opposite: 9 concentric circles centered on the same point and stepped at
+       1pt radial increments. At 24pt it reads as a target/bullseye, not a fingerprint.
+       At 20pt the inner rings merge into a fuzzy disc; at 16pt the whole thing
+       collapses into a noisy blob.
+       Failure mode: over-detailed at 20pt; closed concentric pattern reads as bullseye.
+       Violates references/icon-vocabulary.md (fingerprint cliché list) and
+       references/aesthetic-principles.md principle 1 (restraint) and 7
+       (construction visible at 200% — every ring is noise). -->
+  <circle cx="12" cy="12" r="1" />
+  <circle cx="12" cy="12" r="2" />
+  <circle cx="12" cy="12" r="3" />
+  <circle cx="12" cy="12" r="4" />
+  <circle cx="12" cy="12" r="5" />
+  <circle cx="12" cy="12" r="6" />
+  <circle cx="12" cy="12" r="7" />
+  <circle cx="12" cy="12" r="8" />
+  <circle cx="12" cy="12" r="9" />
+</svg>

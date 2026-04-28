@@ -2,6 +2,49 @@
 
 This document captures step-by-step upgrade instructions between major and minor versions of `mobile-icon-system`.
 
+## 0.3.0 → 0.4.0
+
+The v0.4 release closes the grader→regen loop, adds semantic failure detection as hard_fail, expands the corpus from 27 to 118 SVGs / 14 to 44 metaphors, fills color-system.md, ships 3 visual style packs (Liquid Glass, chromatic duotone, claymorphism), and adds 10 vertical-domain metaphor catalogs. No file format in `assets/package-template/` changed; existing v0.3 packages remain valid.
+
+### What you should do
+
+1. **Re-install** to pick up new reference files and corpus:
+   ```bash
+   python3 scripts/install_skill.py --codex --force
+   python3 scripts/install_skill.py --claude-project /path/to/your/project --force
+   ```
+2. **Refresh the calibration corpus** to download all 88 new SVGs:
+   ```bash
+   python3 scripts/fetch_references.py --update
+   ```
+3. **(Optional) Try the regeneration loop**: after the LLM ships a set, run:
+   ```bash
+   pip install -r requirements-grade.txt    # if not already
+   python3 scripts/grade_with_fixes.py path/to/your/icons --brief-out regen_brief.md
+   ```
+   Hand the brief to the LLM and ask it to regenerate the flagged icons. Re-run the script to verify improvement. Cap at 2 iterations per icon.
+
+### What changed in inputs
+
+- Phase 4 (Build context) now matches your stated app category to one of 10 domain-metaphor catalogs. If you say "music streaming app", the skill loads `references/domain-metaphors/music.md` plus the cross-domain disambiguation file in Phase 6.
+- Phase 5 (Rules gate) now asks you to declare visual style (default monochrome / duotone-mono / liquid-glass / duotone-chromatic / claymorphism). Each style pack has a "Refuse if" condition checked against your brand DNA.
+- Phase 6 (Vocabulary) loads matched domain catalog + cross-domain patterns + universal vocabulary. Domain wins where it conflicts with universal (e.g., heart in health = anatomical, not romantic).
+- Phase 8 (Audit) adds Pass C (grader-driven regeneration loop) — runs the programmatic grader, emits `regen_brief.md`, regenerates flagged icons, re-runs grader. Cap at 2 iterations per icon.
+
+### What changed in outputs
+
+- New required output-contract field: `Visual style:` declaration in every response.
+- Phase 8 audit now hard_fails on two semantic checks: anti-example similarity (output too close to a tier-c documented failure) and color-only state distinction (state pair differs only in color, not shape — fails accessibility).
+
+### Breaking changes
+
+None. All v0.3 prompts continue to work. Style-pack selection is opt-in (default = monochrome). Domain catalog matching is automatic but additive.
+
+### Known v0.4 limitations
+
+- 3 new tier-A icons (`banknote.svg`, `fingerprint.svg`, `scissors.svg`) hard_fail the silhouette stability check at 16pt due to fine details collapsing — documented in their respective `.notes.md` files. They remain tier-A at 24pt+ (their design size) but should not be naively downscaled to 16pt.
+- The grader's `reference.py` (legacy v0.3 pHash check, distinct from new `anti_example_similarity.py`) has a known alpha-drop bug that produces all-zero distances for transparent SVGs. The new `anti_example_similarity.py` works around this with white-compositing. Fix scheduled for v0.4.1.
+
 ## 0.2.0 → 0.3.0
 
 The 0.3.0 release adds the calibration corpus, generate-N-pick-1, second-eye critique loop, numerical craft rubric, negative-space and aesthetic-principles references, and the render-and-grade pipeline. No file format in `assets/package-template/` changed; existing v0.2.0 packages remain valid.

@@ -23,6 +23,12 @@ on purpose.
 | `home-overdetailed.svg` | **Over-detailed.** Literal house with chimney, three windows with cross-mullions, door with knob. Cliché list violation. |
 | `user-gendered.svg` | **Gendered.** Long-hair triangles + arms-akimbo posture code the figure as feminine. Profile icons must default to non-gendered forms. |
 | `notification-color-state.svg` | **Color-only state distinction.** Unread state is conveyed only by `fill="red"` — fails Forced Colors mode and color-blindness. |
+| `lock-thin.svg` | **Under-mass at small sizes.** Stroke 1.5 + shackle radius < body height/2. Padlock dissolves into thin lines at 16-20pt; shackle reads as rounded U, not true semicircle. |
+| `refresh-off.svg` | **Slash-language reference.** Catalogued as tier-C anchor for the `m2 2 20 20` slash construction shared by every "X off" state in the corpus (eye-off, mic-off, cloud-off). Use as calibration reference for off-state language consistency, not as a construction to lift directly. |
+| `sort-list-filter.svg` | **Visual confusion with hamburger nav.** Three lines of decreasing length read as a global navigation menu, not a sort/filter control, at 20pt. |
+| `fingerprint-9loops.svg` | **Over-detailed at 20pt + bullseye reading.** 9 concentric perfect circles. Real fingerprints are 2-3 visible offset arcs (non-concentric); concentric pattern collapses to target/bullseye. |
+| `credit-card-branded.svg` | **Brand-coupled metaphor.** Card body + magstripe + chip + Visa-like swoosh. Once a generic icon points at one brand, every other brand looks wrong. Compare against tier-A `credit-card.svg` (Lucide): 2 primitives only. |
+| `duotone-color-only.svg` | **Color-only state for the duotone family.** Mass layer bound to literal `red`, outline to literal `black`. Fails Forced Colors mode and deuteranopia simulation. Compare against tier-A duotone exemplars where both layers bind to `currentColor`. |
 
 For each file, the sibling `*.notes.md` documents the failure mode in detail
 and points to the tier-A reference the LLM should compare against instead.

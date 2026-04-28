@@ -16,6 +16,8 @@ __all__ = [
     "squint",
     "pair",
     "reference",
+    "anti_example_similarity",
+    "color_only_state",
     "report",
     "config",
 ]
