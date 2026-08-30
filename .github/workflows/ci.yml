@@ -101,3 +101,26 @@ jobs:
         run: python3 scripts/smoke_test_grade_with_fixes.py
       - name: Smoke test visual regression comparator
         run: python3 scripts/smoke_test_visual_regression.py
+      - name: Smoke test grade.contrast
+        run: python3 scripts/smoke_test_contrast.py
+      # Checks declared colour pairs, not rendered pixels. The masters use
+      # currentColor, so the shipped ink lives in the consuming palette.
+      - name: WCAG non-text contrast on the shipped demo palette
+        run: python3 scripts/check_contrast.py assets/demo-package/palette.json
+      # THE GATE THAT NEVER RAN. render_and_grade.py existed from v0.4 but was
+      # never invoked by CI, so the shipped demo package drifted until three of
+      # its five icons hard-failed the repo's own grader. Exit 1 is soft
+      # warnings (alignment/stroke are documented as false-positive-prone on
+      # the tier-A corpus - see grade/report.py); exit 2 is a hard failure and
+      # must break the build.
+      - name: Grade the shipped demo package
+        run: |
+          set +e
+          python3 scripts/render_and_grade.py assets/demo-package/exports/svg-masters
+          code=$?
+          set -e
+          if [ "$code" -ge 2 ]; then
+            echo "::error::demo package hard-fails its own grader (exit $code)"
+            exit 1
+          fi
+          echo "demo package: no hard failures (exit $code)"

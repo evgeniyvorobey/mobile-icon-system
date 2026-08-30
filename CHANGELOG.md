@@ -5,6 +5,29 @@ All notable changes to this skill will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this skill adheres to [Semantic Versioning](https://semver.org/).
 
+## [0.7.0] — 2026-08-30
+
+Honesty release. Two claims in this repository were not true, and the mechanism that
+should have caught both had never run. This release makes the claims true, runs the
+mechanism, and adds validators so neither can silently drift again.
+
+### Added
+
+- **WCAG 2.2 non-text contrast, computed rather than asserted** ([`scripts/grade/contrast.py`](scripts/grade/contrast.py), [`scripts/check_contrast.py`](scripts/check_contrast.py), [`scripts/smoke_test_contrast.py`](scripts/smoke_test_contrast.py)): sRGB linearisation, relative luminance and contrast ratio per WCAG 2.x, checked against SC 1.4.11 (3:1 non-text, 4.5:1 at AAA) and SC 1.4.3 (4.5:1 for text inside an icon). The maths is verified against nine published WCAG reference values rather than against its own output. Colours carrying alpha are rejected instead of silently composited, because a translucent ink has no single ratio — the worst-case backdrop has to be declared as its own opaque pair. Decorative pairs are skipped and counted, never silently dropped. The smoke test includes a falsifier: a palette built to fail must fail.
+- **A declared palette for the demo package** ([`assets/demo-package/palette.json`](assets/demo-package/palette.json)): `system-rules.md` stated a 3:1 target while the masters use `currentColor` and bake no colour, so there was nothing to measure. The palette declares the foreground/background pairs the set ships with, including one hairline explicitly marked decorative with the reason recorded.
+- **Two repository validators** ([`scripts/validate_skill_repo.py`](scripts/validate_skill_repo.py)): the corpus size quoted in `SKILL.md` is now read back against the files on disk, and `ci.yml` is required to *invoke* `render_and_grade.py` and `check_contrast.py` — matched on the invocation form, not a bare mention, because a mention in a comment satisfied the first version of the check. Both were confirmed with falsifiers.
+
+### Fixed
+
+- **The gate that never ran.** `render_and_grade.py` shipped in v0.4 and was never invoked by any workflow. The shipped demo package had drifted to `ok=0, warn=2, hard_fail=3` — three of five icons hard-failing this repository's own grader — while CI stayed green. It now runs in CI and breaks the build on a hard failure.
+- **The demo icons themselves.** `ic_tab_plan_outlined`, `ic_tab_today_outlined` and `ic_action_capture` failed the silhouette check: components merged or vanished at 16pt. Root causes were a 0.45-unit gap between the check stroke and the divider, list dots of r=1 whose rendered area at 16pt fell below the 2px² component floor, and a tray detail line too close to the tray. Geometry redrawn; all three are now stable at 16, 20 and 24pt with their documented metaphors intact. `vocabulary.md` had honestly predicted both failures ("divider may disappear below 16pt", "row spacing needs QA") — the assets were simply never fixed.
+- **A hard failure the report refused to name.** `grade/report.py` set the `hard_fail` flag when a check in `hard_fail_keys` returned `passed=False` without an error string, but appended no message — so the report showed a `hard_fail` verdict whose only line was an unrelated soft warning. Hard failures now state the measurement that caused them.
+
+### Changed
+
+- **`README.md` and `SKILL.md` no longer claim icons are "validated for WCAG 2.2 accessibility".** They now say what is mechanically checked (non-text contrast on the declared palette, colour-blind-safe state distinction) and what is guidance the skill applies but this repository does not validate (touch targets, screen-reader labelling, Dynamic Type, reduced motion, Forced Colors).
+- Corpus size in `SKILL.md` corrected from "44-metaphor / 118-SVG" to the actual 122 SVGs (75 tier-A, 21 tier-B, 11 tier-C anti-examples, 15 duotone/mini/micro and custom anchors), and now validated.
+
 ## [0.6.0] — 2026-04-28
 
 Production-integration release. The skill now turns the v0.5 motion/style systems into a more complete shipping workflow: Lottie/dotLottie asset validation, rendered multi-style contact sheets, platform export scaffolding, a generated demo package, style-pack registry discovery, design-tool write-back planning, visual regression checks, and an additive custom corpus expansion.

@@ -1,0 +1,46 @@
+{
+  "tier": "AA",
+  "notes": [
+    "system-rules.md states a 3:1 non-text contrast target but the SVG masters use currentColor and bake no brand colour, so the ratio cannot be measured from the files themselves. This file declares the foreground/background pairs the set is intended to ship with; scripts/check_contrast.py checks them against WCAG 2.2 SC 1.4.11.",
+    "Translucent surfaces are not modelled. If a bar uses a material rather than a solid fill, declare the worst-case backdrop it can show as its own opaque pair - see references/accessibility.md."
+  ],
+  "pairs": [
+    {
+      "label": "Tab Bar selected glyph on light bar",
+      "foreground": "#1B4DE4",
+      "background": "#FFFFFF"
+    },
+    {
+      "label": "Tab Bar unselected glyph on light bar",
+      "foreground": "#5B6270",
+      "background": "#FFFFFF"
+    },
+    {
+      "label": "Tab Bar selected glyph on dark bar",
+      "foreground": "#8AB4FF",
+      "background": "#12141A"
+    },
+    {
+      "label": "Tab Bar unselected glyph on dark bar",
+      "foreground": "#9AA1AE",
+      "background": "#12141A"
+    },
+    {
+      "label": "Capture action glyph on brand fill",
+      "foreground": "#FFFFFF",
+      "background": "#1B4DE4"
+    },
+    {
+      "label": "Disabled action glyph on light surface",
+      "foreground": "#767676",
+      "background": "#FFFFFF"
+    },
+    {
+      "label": "Bar hairline divider",
+      "foreground": "#E6E8EC",
+      "background": "#FFFFFF",
+      "decorative": true,
+      "why_decorative": "Carries no information and is not a control affordance; state is conveyed by glyph fill vs outline. At 1.23:1 it would fail SC 1.4.11 if it were informational, which is the point of declaring the exemption explicitly rather than leaving it unchecked."
+    }
+  ]
+}

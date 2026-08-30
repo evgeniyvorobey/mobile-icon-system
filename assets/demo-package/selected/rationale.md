@@ -3,7 +3,7 @@
 Project: Tidepool Tasks
 Owner: Demo Package
 Date: 2026-04-28
-Skill version: mobile-icon-system v0.6.0
+Skill version: mobile-icon-system v0.7.0
 
 ## The Brief
 

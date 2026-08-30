@@ -19,6 +19,40 @@ def _verdict_for_icon(icon: Dict[str, Any]) -> str:
     return "ok"
 
 
+def _explain_failure(key: str, result: Dict[str, Any]) -> str:
+    """Turn a hard-failing check's own numbers into one readable sentence.
+
+    Checks report ``passed: False`` without always writing an error string.
+    Rather than let the report say nothing, read the measurement the check
+    already produced and state it.
+    """
+    if key == "silhouette":
+        regressions = result.get("regressions") or []
+        expected = result.get("expected")
+        if regressions:
+            detail = ", ".join(
+                f"{r.get('size')}pt renders {r.get('count')}"
+                if r.get("count") is not None
+                else f"{r.get('size')}pt failed to render"
+                for r in regressions
+            )
+            return (
+                f"silhouette breaks up at small sizes: expected {expected} "
+                f"separate shapes, but {detail}. Parts are merging or "
+                f"disappearing - increase the gaps between elements."
+            )
+        return "silhouette is not stable across the rendered sizes"
+    if key == "color_only_state":
+        return (
+            "states differ by colour alone (shape_diff_ratio "
+            f"{result.get('shape_diff_ratio')}): unusable for colour-blind users"
+        )
+    if key == "anti_example_similarity":
+        nearest = result.get("nearest") or result.get("closest")
+        return f"too close to a known anti-example{f' ({nearest})' if nearest else ''}"
+    return "failed a hard threshold"
+
+
 def aggregate_icon(name: str, checks: Dict[str, Any]) -> Dict[str, Any]:
     """Roll a single icon's per-check results into one dict + verdict."""
     # Default hard-fail keys catch unambiguous failures: silhouette
@@ -63,6 +97,12 @@ def aggregate_icon(name: str, checks: Dict[str, Any]) -> Dict[str, Any]:
         if not result.get("passed", True):
             if key in hard_fail_keys:
                 hard_fail = True
+                # Record WHY. Without this the report shows a hard_fail verdict
+                # whose only listed line is an unrelated soft warning, which is
+                # how three demo icons sat broken while the report said
+                # "warn: alignment". A gate that cannot name its own failure is
+                # not a gate.
+                errors.append(f"{key}: {_explain_failure(key, result)}")
             elif key in warn_keys:
                 warnings.append(f"{key}: failed soft threshold")
             else:

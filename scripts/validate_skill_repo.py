@@ -304,6 +304,63 @@ def validate_creative_divergence_examples() -> None:
         )
 
 
+def validate_reference_corpus_count() -> None:
+    """The corpus size quoted in SKILL.md must match the files on disk.
+
+    SKILL.md advertised a "44-metaphor / 118-SVG" corpus while the directory
+    held 122 SVGs. Nobody noticed because nothing counted. A number in prose
+    that no test reads is a number that drifts, so this reads it back.
+    """
+    refs = ROOT / "assets" / "references"
+    if not refs.is_dir():
+        fail("assets/references/ is missing; the calibration corpus is required")
+    fixtures = refs / "fixtures"
+    actual = sum(
+        1
+        for p in refs.rglob("*.svg")
+        if fixtures not in p.parents and p.parent != fixtures
+    )
+    text = (ROOT / "SKILL.md").read_text(encoding="utf-8")
+    m = re.search(r"hand-curated (\d+)-SVG reference corpus", text)
+    if not m:
+        fail(
+            "SKILL.md no longer states the reference corpus size in the form "
+            "'hand-curated <N>-SVG reference corpus'; update this validator "
+            "together with the wording"
+        )
+    claimed = int(m.group(1))
+    if claimed != actual:
+        fail(
+            f"SKILL.md claims a {claimed}-SVG reference corpus but "
+            f"assets/references/ holds {actual} SVGs (excluding fixtures). "
+            f"Update the wording or the corpus."
+        )
+
+
+def validate_grader_runs_in_ci() -> None:
+    """render_and_grade.py must be wired into CI.
+
+    It shipped from v0.4 and was never invoked by any workflow, so the demo
+    package drifted until three of its five icons hard-failed this repo's own
+    grader while CI stayed green. A grader nothing runs is documentation.
+    """
+    ci = ROOT / ".github" / "workflows" / "ci.yml"
+    if not ci.is_file():
+        fail(".github/workflows/ci.yml is missing")
+    text = ci.read_text(encoding="utf-8")
+    for script in ("render_and_grade.py", "check_contrast.py"):
+        # Match the invocation form, not a bare mention: the comment above the
+        # step names render_and_grade.py, so a substring check passes even when
+        # the step itself has been removed. Checked with a falsifier.
+        if not re.search(rf"python3?\s+scripts/{re.escape(script)}", text):
+            fail(
+                f"ci.yml never invokes scripts/{script} (a mention in a comment "
+                f"does not count). A gate that never runs is not a gate - this "
+                f"validator exists because that is exactly what happened to "
+                f"render_and_grade.py between v0.4 and v0.6."
+            )
+
+
 def main() -> int:
     validate_required_files()
     validate_skill_frontmatter()
@@ -312,6 +369,8 @@ def main() -> int:
     validate_installer_script()
     validate_prompt_library_user_gate()
     validate_creative_divergence_examples()
+    validate_reference_corpus_count()
+    validate_grader_runs_in_ci()
     print("[OK] Skill repository structure and relative links are valid.")
     return 0
 
